@@ -62,12 +62,11 @@ def parse_fields(sheet, group):
     """
     Parse sheet headers and return field definitions.
     """
-    LOG_INFO("Parsing fields...")
+    LOG_DEBUG("Parsing fields...")
     field_map = dict()
     field_names = []
     ncols = sheet.ncols
     for i in range(DATA_BEGIN_COL, ncols):
-        curr_filed_groups = sheet.cell_value(GROUP_FILTER_ROW, i).encode("utf-8").strip()
         field_name = sheet.cell_value(FIELD_NAME_ROW, i).encode("utf-8").strip()
 
         if len(field_name) == 0:
@@ -80,6 +79,7 @@ def parse_fields(sheet, group):
         if field_name.startswith("#"):
             need_export_filed = False
         elif group is not None:
+            curr_filed_groups = sheet.cell_value(GROUP_FILTER_ROW, i).encode("utf-8").strip()
             need_export_filed = group in curr_filed_groups
 
         if not need_export_filed:
@@ -179,7 +179,6 @@ def gen_proto(sheet_name, field_names, field_map):
 
     cmd = "%s -I %s --python_out=%s %s"\
         % (PROTOC_BIN, PROTO_OUTPUT_PATH, PYTHON_OUTPUT_PATH, file_name)
-    # subprocess.check_call([PROTOC_BIN, src_dir, "--python_out=" + PYTHON_OUTPUT_PATH, file_name])
     subprocess.check_call(cmd, shell=False)
     return True
 
@@ -201,13 +200,13 @@ def get_field_value(cell, field_type):
 
 
 def parse_row(sheet, row, item_id, field_names, field_map, item):
-    LOG_DEBUG("parsing row %s, id %s" % (row, item_id))
+    #LOG_DEBUG("parsing row %s, id %s" % (row, item_id))
     item.__setattr__(ID_FIELD_NAME, item_id)
     for field_name in field_names:
         field_info = field_map[field_name]
         cols = field_info["cols"]
         field_type = field_info["field_type"]
-        LOG_DEBUG("parsing row: field_name = " + field_name)
+        #LOG_DEBUG("parsing row: field_name = " + field_name)
         if len(cols) == 1:
             cell = sheet.cell(row, cols[0])
             item.__setattr__(field_name, get_field_value(cell, field_type))
@@ -215,7 +214,6 @@ def parse_row(sheet, row, item_id, field_names, field_map, item):
             for col in cols:
                 cell = sheet.cell(row, col)
                 item.__getattribute__(field_name).append(get_field_value(cell, field_type))
-    print item
 
 
 def gen_binary(sheet, sheet_name, field_names, field_map):
@@ -228,7 +226,7 @@ def gen_binary(sheet, sheet_name, field_names, field_map):
     for row in range(DATA_BEGIN_ROW, sheet.nrows):
         id_cell = sheet.cell(row, ID_COL)
         if id_cell.ctype != 2:
-            LOG_DEBUG("Skip row with non-number id, row: " + row)
+            LOG_DEBUG("Skip row with non-number id, row: %s" % row)
             continue
 
         item_id = int(id_cell.value)
@@ -253,8 +251,8 @@ def process_one_file(xls_file_path, output, group):
     for name in sheet_names:
         sheet_name = name.encode("utf-8").strip()
         if sheet_name.startswith("#") or sheet_name.startswith("Sheet"):
-            LOG_DEBUG("# Skip sheet: " + sheet_name)
             continue
+
         LOG_INFO("# Processing sheet: " + sheet_name)
         sheet = workbook.sheet_by_name(sheet_name)
 
@@ -267,14 +265,20 @@ def process_one_file(xls_file_path, output, group):
         gen_binary(sheet, sheet_name, field_names, field_map)
 
 
-def process_path(file_path, output, group):
+def files_within(file_path, pattern="*"):
+    import os
+    import fnmatch
+
     if os.path.isfile(file_path) :
-        process_one_file(file_path, output, group)
-    elif os.path.isdir(file_path) :
-        path_list = os.listdir(file_path)
-        for path in path_list :
-            real_file_path = file_path+"/"+path
-            process_path(real_file_path, output, group)
+        yield file_path
+    else:
+        for dirpath, dirnames, filenames in os.walk(file_path):
+            for file_name in fnmatch.filter(filenames, pattern):
+                yield os.path.join(dirpath, file_name)
+
+def process_path(file_path, output, group):
+    for f in files_within(file_path, pattern="*.xls"):
+        process_one_file(f, output, group)
 
 
 def usage():
