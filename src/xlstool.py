@@ -53,12 +53,27 @@ class FieldInfo:
 
 
 class SheetMeta:
-    def __init__(self):
-        self.sheet_name = ''
+    def __init__(self, sheet_name):
+        self.sheet_name = sheet_name
         self.field_names = []
         self.field_types = {}
         self.field_cols = {}
         self.field_descs = {}
+
+    def has_field(self, field_name):
+        return field_name in self.field_names
+
+    def add_field(self, field_name, field_type, desc):
+        self.field_names.append(field_name)
+        self.field_types[field_name] = field_type
+        self.field_descs[field_name] = desc
+        self.field_cols[field_name] = []
+
+    def add_col_to_field(self, field_name, col):
+        self.field_cols[field_name].append(col)
+
+    def field_type(self, field_name):
+        return self.field_types[field_name]
 
     def field_names(self):
         return self._field_names
@@ -88,6 +103,8 @@ def parse_fields(sheet_name, sheet, group):
     Parse sheet headers and return field definitions.
     """
     LOG_DEBUG("Parsing fields...")
+    sheet_meta = SheetMeta(sheet_name)
+
     field_names = []
     field_types = {}
     field_descs = {}
@@ -121,27 +138,20 @@ def parse_fields(sheet_name, sheet, group):
         if field_type not in SUPPORTED_TYPES:
             raise Exception("Unsupported type: field: %s, type: %s" % (field_name, field_type))
 
-        if field_name not in field_names:
-            field_names.append(field_name)
-            field_types[field_name] = field_type
-            field_cols[field_name] = [i]
+        # merge fields if names and types are match
+        if not sheet_meta.has_field(field_name):
             desc = unicode(sheet.cell_value(FIELD_COMMENT_ROW, i))
-            field_descs[field_name] = desc
+            sheet_meta.add_field(field_name, field_type, desc)
+            sheet_meta.add_col_to_field(field_name, i)
         else:
-            if field_type != field_types[field_name]:
+            if field_type != sheet_meta.field_type(field_name):
                 raise Exception(
                     "Field type is different from the same field before: field %s , type %s" % (field_name, field_type))
-            field_cols[field_name].append(i)
+            sheet_meta.add_col_to_field(field_name, i)
 
-    if len(field_names) == 0:
+    if len(sheet_meta.field_names) == 0:
         return None
     else:
-        sheet_meta = SheetMeta()
-        sheet_meta.sheet_name = sheet_name
-        sheet_meta.field_names = field_names
-        sheet_meta.field_types = field_types
-        sheet_meta.field_cols = field_cols
-        sheet_meta.field_descs = field_descs
         return sheet_meta
 
 
