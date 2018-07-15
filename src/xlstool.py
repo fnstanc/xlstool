@@ -36,6 +36,7 @@ DATA_BEGIN_COL = 1
 ID_COL = 0
 
 ID_FIELD_NAME = "id"
+DATA_BLOCKS_STRUCT_NAME = "DataBlocks"
 
 PROTOC_BIN = "protoc"
 
@@ -189,11 +190,19 @@ def output_id_filed(content):
     output_field(fi, 1, content)
 
 
-def gen_proto(sheet_name, sheet_meta):
+def gen_py_proto(file_name):
+    cmd = "%s -I %s --python_out=%s %s"\
+        % (PROTOC_BIN, PROTO_OUTPUT_PATH, PYTHON_OUTPUT_PATH, file_name)
+    subprocess.check_call(cmd, shell=False)
+
+
+def gen_proto_for_sheet(sheet_meta):
+    sheet_name = sheet_meta.sheet_name
+
     file_name = sheet_name + ".proto"
     proto_file = os.path.join(PROTO_OUTPUT_PATH, file_name)
 
-    LOG_INFO("Generating proto: " + proto_file)
+    LOG_INFO("==> Generating proto: " + proto_file)
     content = []
 
     output_proto_header(content, file_name)
@@ -209,20 +218,38 @@ def gen_proto(sheet_name, sheet_meta):
 
     output_struct_tail(sheet_name, content)
 
-    content.append("\n")
-
-    array_name = sheet_name + "_array"
-    output_struct_head(array_name, content)
-    content.append("    repeated " + sheet_name + " items = 1;\n")
-    output_struct_tail(array_name, content)
-
     with open(proto_file, "w+") as f:
         f.writelines(content)
 
-    cmd = "%s -I %s --python_out=%s %s"\
-        % (PROTOC_BIN, PROTO_OUTPUT_PATH, PYTHON_OUTPUT_PATH, file_name)
-    subprocess.check_call(cmd, shell=False)
-    return True
+    gen_py_proto(file_name)
+
+
+
+def gen_proto(all_sheet_metas):
+    imports = []
+    message_body = []
+
+    block_index = 1
+    for f, sheet_metas in all_sheet_metas.items():
+        for sheet_meta in sheet_metas:
+            gen_proto_for_sheet(sheet_meta)
+            sheet_name = sheet_meta.sheet_name
+            imports.append("import \"%s.proto\";\n" % sheet_meta.sheet_name)
+            message_body.append(
+                "    repeated %s %s_items = %s;\n" % (sheet_name, sheet_name, block_index))
+            block_index = block_index + 1
+
+    fname, fpath = get_proto_path(DATA_BLOCKS_STRUCT_NAME)
+    with open(fpath, "w+") as f:
+        content = []
+        output_proto_header(content, fname)
+        content.extend(imports)
+        content.append("\n")
+        output_struct_head(DATA_BLOCKS_STRUCT_NAME, content)
+        content.extend(message_body)
+        output_struct_tail(DATA_BLOCKS_STRUCT_NAME, content)
+        f.writelines(content)
+    gen_py_proto(fname)
 
 
 def get_field_value(cell, field_type):
@@ -263,56 +290,39 @@ def parse_row(sheet, row, item_id, sheet_meta, item):
                 item.__getattribute__(field_name).append(get_field_value(cell, field_type))
 
 
-def gen_binary(sheet, sheet_name, sheet_meta):
-    module_name = get_pymodule_name(sheet_name)
+def load_pymodule(struct_name):
+    module_name = get_pymodule_name(struct_name)
     exec("from %s import *" % module_name)
     module = sys.modules[module_name]
-    item_array = getattr(module, sheet_name + "_array")()
+    return module
 
-    index = 0
-    for row in range(DATA_BEGIN_ROW, sheet.nrows):
-        id_cell = sheet.cell(row, ID_COL)
-        if id_cell.ctype != 2:
-            LOG_DEBUG("Skip row with non-number id, row: %s" % row)
-            continue
+def gen_binary(all_sheet_metas):
+    data_blocks_module = load_pymodule(DATA_BLOCKS_STRUCT_NAME)
+    data_blocks = getattr(data_blocks_module, DATA_BLOCKS_STRUCT_NAME)()
+    for f, sheet_metas in all_sheet_metas.items():
+        workbook = xlrd.open_workbook(f)
+        for sheet_meta in sheet_metas:
+            sheet_name = sheet_meta.sheet_name
+            sheet = workbook.sheet_by_name(sheet_name)
+            items = data_blocks.__getattribute__(sheet_name + "_items")
+            LOG_INFO("==> Export data from: %s - %s" % (sheet_name, f))
+            index = 0
+            for row in range(DATA_BEGIN_ROW, sheet.nrows):
+                id_cell = sheet.cell(row, ID_COL)
+                if id_cell.ctype != 2:
+                    LOG_DEBUG("Skip row with non-number id, row: %s" % row)
+                    continue
+                item_id = int(id_cell.value)
+                item = items.add()
+                parse_row(sheet, row, item_id, sheet_meta, item)
+                index += 1
 
-        item_id = int(id_cell.value)
-        item = item_array.items.add()
-        parse_row(sheet, row, item_id, sheet_meta, item)
-        index += 1
-
-    data = item_array.SerializeToString()
-    bytes_path = get_bytes_path(sheet_name)
+    data = data_blocks.SerializeToString()
+    bytes_path = get_bytes_path(DATA_BLOCKS_STRUCT_NAME)
 
     LOG_INFO("Generating bytes: " + bytes_path)
     with open(bytes_path, "wb+") as f:
         f.write(data)
-
-
-def process_one_file(xls_file_path, output, group):
-    if ".xls" not in xls_file_path:
-        return
-    LOG_INFO("==> Processing file: " + xls_file_path)
-    workbook = xlrd.open_workbook(xls_file_path)
-    sheet_names = workbook.sheet_names()
-    for name in sheet_names:
-        sheet_name = name.encode("utf-8").strip()
-        if sheet_name.startswith("#") or sheet_name.startswith("Sheet"):
-            continue
-
-        LOG_INFO("# Processing sheet: " + sheet_name)
-        sheet = workbook.sheet_by_name(sheet_name)
-
-        sheet_meta = parse_fields(sheet_name, sheet, group)
-        if sheet_meta is None:
-            continue
-
-        # for n in sheet_meta.field_names():
-        #     fi = sheet_meta.field_info(n)
-        #     print n, fi.cols()
-
-        gen_proto(sheet_name, sheet_meta)
-        gen_binary(sheet, sheet_name, sheet_meta)
 
 
 def files_within(file_path, pattern="*"):
@@ -327,9 +337,40 @@ def files_within(file_path, pattern="*"):
                 yield os.path.join(dirpath, file_name)
 
 
+def parse_xls_sheet_meta(file_path, group):
+    all_sheet_names = {}
+    all_sheet_metas = {}
+    for xls_file_path in files_within(file_path, pattern="*.xls"):
+        LOG_INFO("==> Parsing sheet meta for file: " + xls_file_path)
+        workbook = xlrd.open_workbook(xls_file_path)
+        sheet_names = workbook.sheet_names()
+        sheet_metas = []
+        for name in sheet_names:
+            sheet_name = name.encode("utf-8").strip()
+            if sheet_name.startswith("#") or sheet_name.startswith("Sheet"):
+                continue
+
+            if sheet_name in all_sheet_names:
+                raise Exception("sheet name collision: %s - %s, %s" %
+                    (sheet_name, xls_file_path, all_sheet_names[sheet_name]))
+            all_sheet_names[sheet_name] = xls_file_path
+
+            LOG_INFO("Parsing sheet: " + sheet_name)
+            sheet = workbook.sheet_by_name(sheet_name)
+            sheet_meta = parse_fields(sheet_name, sheet, group)
+            if sheet_meta is None:
+                continue
+            sheet_metas.append(sheet_meta)
+        if len(sheet_metas) > 0:
+            all_sheet_metas[xls_file_path] = sheet_metas
+
+    return all_sheet_metas
+
+
 def process_path(file_path, output, group):
-    for f in files_within(file_path, pattern="*.xls"):
-        process_one_file(f, output, group)
+    all_sheet_metas = parse_xls_sheet_meta(file_path, group)
+    gen_proto(all_sheet_metas)
+    gen_binary(all_sheet_metas)
 
 
 def usage():
