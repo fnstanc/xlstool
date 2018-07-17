@@ -9,7 +9,7 @@
 PROTOGEN_BIN = "protogen"
 
 
-def output_cs_file_header(package_name, container_name, file_name):
+def output_cs_file_header(package_name, loader_name, file_name):
     header = \
 '''/*
 * @file: %s
@@ -23,7 +23,7 @@ namespace %s {
 public static class %s {
 
 '''
-    return header % (file_name, package_name, container_name)
+    return header % (file_name, package_name, loader_name)
 
 
 def output_cs_file_tail():
@@ -60,7 +60,7 @@ def output_item_getter_function(full_type_name, sheet_name, indent, output):
     output.append(' ' * indent + "}\n\n")
 
 
-def gen_code(package_name, container_name, datablocks_name, all_sheet_metas, output_path):
+def gen_code(package_name, loader_name, datablocks_name, all_sheet_metas, output_path):
     member_lines = []
     member_init_codes = []
     getter_functions = []
@@ -79,10 +79,10 @@ def gen_code(package_name, container_name, datablocks_name, all_sheet_metas, out
     member_lines.append('\n')
 
     import os
-    file_name = container_name + ".cs"
+    file_name = loader_name + ".cs"
     file_path = os.path.join(output_path, file_name)
     with open(file_path, "w") as f:
-        f.write(output_cs_file_header(package_name, container_name, file_name))
+        f.write(output_cs_file_header(package_name, loader_name, file_name))
         f.writelines(member_lines)
 
         f.write(begin_init_function(package_name, datablocks_name, 4))

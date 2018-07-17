@@ -16,16 +16,17 @@ import xlrd
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 logger = logging.getLogger()
 LOG_DEBUG = logger.debug
 LOG_INFO = logger.info
+LOG_WARN = logger.warning
 LOG_ERR = logger.error
 
-OUTPUT_PATH = "output/"
-PROTO_OUTPUT_PATH = OUTPUT_PATH + "proto/"
-BYTES_OUTPUT_PATH = OUTPUT_PATH + "bytes/"
-PYTHON_OUTPUT_PATH = OUTPUT_PATH + "py/"
+PROTO_OUTPUT_PATH = "./output/proto/"
+BYTES_OUTPUT_PATH = "./output/bytes/"
+PYTHON_OUTPUT_PATH = "./output/py/"
+CS_OUTPUT_PATH = "./output/cs/"
 
 FIELD_NAME_ROW = 0
 FIELD_TYPE_ROW = 1
@@ -35,10 +36,11 @@ DATA_BEGIN_ROW = 4
 DATA_BEGIN_COL = 1
 ID_COL = 0
 
+PROTOC_BIN = "protoc"
 ID_FIELD_NAME = "id"
 DATA_BLOCKS_STRUCT_NAME = "DataBlocks"
-
-PROTOC_BIN = "protoc"
+LOADER_CLASS_NAME = "DataCenter"
+PACKAGE_NAME = "AppConfig"
 
 INTEGER_TYPES = ["int32", "int64", "uint32", "uint64"]
 FRACTION_TYPES = ["float", "double"]
@@ -89,10 +91,6 @@ def get_proto_path(sheet_name):
     file_name = sheet_name + ".proto"
     proto_file = os.path.join(PROTO_OUTPUT_PATH, file_name)
     return file_name, proto_file
-
-
-def get_pymodule_name(sheet_name):
-    return sheet_name + "_pb2"
 
 
 def get_bytes_path(sheet_name):
@@ -165,8 +163,10 @@ def output_proto_header(content, file_name):
 
 syntax = "proto2";
 
+package %s;
+
 ''')
-    content.append(proto_header % file_name)
+    content.append(proto_header % (file_name, PACKAGE_NAME))
 
 
 def output_struct_head(struct_name, content):
@@ -190,17 +190,16 @@ def output_id_filed(content):
     output_field(fi, 1, content)
 
 
-def gen_py_proto(file_name):
+def gen_python_source(proto_file):
     cmd = "%s -I %s --python_out=%s %s"\
-        % (PROTOC_BIN, PROTO_OUTPUT_PATH, PYTHON_OUTPUT_PATH, file_name)
+        % (PROTOC_BIN, PROTO_OUTPUT_PATH, PYTHON_OUTPUT_PATH, proto_file)
     subprocess.check_call(cmd, shell=False)
 
 
 def gen_proto_for_sheet(sheet_meta):
     sheet_name = sheet_meta.sheet_name
 
-    file_name = sheet_name + ".proto"
-    proto_file = os.path.join(PROTO_OUTPUT_PATH, file_name)
+    file_name, proto_file = get_proto_path(sheet_name)
 
     LOG_INFO("==> Generating proto: " + proto_file)
     content = []
@@ -221,8 +220,7 @@ def gen_proto_for_sheet(sheet_meta):
     with open(proto_file, "w+") as f:
         f.writelines(content)
 
-    gen_py_proto(file_name)
-
+    gen_python_source(file_name)
 
 
 def gen_proto(all_sheet_metas):
@@ -249,7 +247,7 @@ def gen_proto(all_sheet_metas):
         content.extend(message_body)
         output_struct_tail(DATA_BLOCKS_STRUCT_NAME, content)
         f.writelines(content)
-    gen_py_proto(fname)
+    gen_python_source(fname)
 
 
 def get_field_value(cell, field_type):
@@ -291,7 +289,7 @@ def parse_row(sheet, row, item_id, sheet_meta, item):
 
 
 def load_pymodule(struct_name):
-    module_name = get_pymodule_name(struct_name)
+    module_name = struct_name + "_pb2"
     exec("from %s import *" % module_name)
     module = sys.modules[module_name]
     return module
@@ -320,7 +318,7 @@ def gen_binary(all_sheet_metas):
     data = data_blocks.SerializeToString()
     bytes_path = get_bytes_path(DATA_BLOCKS_STRUCT_NAME)
 
-    LOG_INFO("Generating bytes: " + bytes_path)
+    LOG_INFO("==> Generating bytes: " + bytes_path)
     with open(bytes_path, "wb+") as f:
         f.write(data)
 
@@ -372,53 +370,81 @@ def process_path(file_path, output, tag):
     gen_proto(all_sheet_metas)
     gen_binary(all_sheet_metas)
 
+    from codegen import unity_csharp_codegen
+    unity_csharp_codegen.gen_code(PACKAGE_NAME,
+        LOADER_CLASS_NAME, DATA_BLOCKS_STRUCT_NAME, all_sheet_metas, CS_OUTPUT_PATH)
 
 def usage():
     print '''
-Usage: %s [options] excel_file
+Usage: %s [options] excel_file output_dir
 option:
     -h, --help
-    -o, --output=   proto, bytes
-    -t, --tag=    only export fields which has the tag
+    -t, --tag=              Only export fields which has the tag
+        --cs_out            Generate csharp code
+        --loader_name=      Config loader class name
+        --package_name=     Proto package name
 ''' % (sys.argv[0])
+
+
+def init_output_paths(output_dir):
+    if os.path.exists(output_dir):
+        shutil.rmtree(output_dir)
+
+    PROTO_OUTPUT_PATH = os.path.join(output_dir, "proto")
+    BYTES_OUTPUT_PATH = os.path.join(output_dir, "bytes")
+    PYTHON_OUTPUT_PATH = os.path.join(output_dir, "py")
+    CS_OUTPUT_PATH = os.path.join(output_dir, "cs")
+
+    os.makedirs(PROTO_OUTPUT_PATH)
+    os.makedirs(PYTHON_OUTPUT_PATH)
+    os.makedirs(BYTES_OUTPUT_PATH)
+    os.makedirs(CS_OUTPUT_PATH)
 
 
 if __name__ == '__main__' :
     try:
-        opt, args = getopt.getopt(sys.argv[1:], "ho:t:", ["help", "output=", "tag="])
+        opt, args = getopt.getopt(sys.argv[1:],
+            "ht:", ["help", "output=", "tag=", "package_name=", "loader_name="])
     except getopt.GetoptError, err:
         print "err:", (err)
         usage()
         sys.exit(-1)
 
-    if len(args) > 0:
-        xls_file_path = args[0]
-    else :
-        xls_file_path = "."
+    if len(args) < 2:
+        print "not enough arguments."
+        usage()
+        sys.exit(-1)
 
-    output = None
+    xls_file_path = args[0]
+    output_dir = args[1]
+
+    output_codes = []
     tag = None
     for op, value in opt:
         if op == "-h" or op == "--help":
             usage()
             sys.exit(0)
-        elif op == "-o" or op == "--output":
-            output = list()
-            output.append(value)
         elif op == "-t" or op == "--tag":
             tag = value
+        elif op == "--cs_cout":
+            output_codes.append("cs")
+        elif op == "--loader_name":
+            # TODO: Check if it's a valid type name
+            value = value.strip()
+            if len(value) > 0:
+                LOADER_CLASS_NAME = value
+        elif op == "--package_name":
+            # TODO: Check if it's a valid type name
+            value = value.strip()
+            if len(value) > 0:
+                PACKAGE_NAME = value
 
-    if os.path.exists(OUTPUT_PATH):
-        shutil.rmtree(OUTPUT_PATH)
-
-    os.makedirs(PROTO_OUTPUT_PATH)
-    os.makedirs(PYTHON_OUTPUT_PATH)
-    os.makedirs(BYTES_OUTPUT_PATH)
+    init_output_paths(output_dir)
 
     sys.path.append(PYTHON_OUTPUT_PATH)
 
     try:
-        process_path(xls_file_path, output, tag)
+        process_path(xls_file_path, output_dir, tag)
     except BaseException, info:
         print info
         raise
