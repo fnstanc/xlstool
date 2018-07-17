@@ -30,7 +30,7 @@ def output_cs_file_tail():
     return "}\n}\n"
 
 
-def output_container_class_member(full_type_name, short_type_name, indent, output):
+def output_loader_class_member(full_type_name, short_type_name, indent, output):
     member = ' ' * indent + "private static readonly Dictionary<int, {}> {}_items = new Dictionary<int, {}>();\n"
     output.append(member.format(full_type_name, short_type_name, full_type_name))
 
@@ -61,6 +61,10 @@ def output_item_getter_function(full_type_name, sheet_name, indent, output):
 
 
 def gen_code(package_name, loader_name, datablocks_name, all_sheet_metas, output_path):
+    import os
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
+
     member_lines = []
     member_init_codes = []
     getter_functions = []
@@ -69,8 +73,8 @@ def gen_code(package_name, loader_name, datablocks_name, all_sheet_metas, output
             sheet_name = sheet_meta.sheet_name
             full_type_name = "{}.{}".format(package_name, sheet_name)
 
-            # output member for data container class
-            output_container_class_member(full_type_name, sheet_name, 4, member_lines)
+            # output member for data loader class
+            output_loader_class_member(full_type_name, sheet_name, 4, member_lines)
 
             # output member initialization codes
             output_member_init_code_snippet(full_type_name, sheet_name, 8, member_init_codes)

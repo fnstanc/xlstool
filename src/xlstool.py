@@ -365,14 +365,18 @@ def parse_xls_sheet_meta(file_path, tag):
     return all_sheet_metas
 
 
-def process_path(file_path, output, tag):
+def process_path(file_path, tag, output):
     all_sheet_metas = parse_xls_sheet_meta(file_path, tag)
     gen_proto(all_sheet_metas)
     gen_binary(all_sheet_metas)
 
-    from codegen import unity_csharp_codegen
-    unity_csharp_codegen.gen_code(PACKAGE_NAME,
-        LOADER_CLASS_NAME, DATA_BLOCKS_STRUCT_NAME, all_sheet_metas, CS_OUTPUT_PATH)
+    if "cs" in output:
+        from codegen import unity_csharp_codegen
+        LOG_INFO("==> Generating csharp binding")
+        unity_csharp_codegen.gen_code(PACKAGE_NAME, LOADER_CLASS_NAME,
+            DATA_BLOCKS_STRUCT_NAME, all_sheet_metas, CS_OUTPUT_PATH)
+
+    LOG_INFO("*** DONE ***")
 
 def usage():
     print '''
@@ -380,7 +384,7 @@ Usage: %s [options] excel_file output_dir
 option:
     -h, --help
     -t, --tag=              Only export fields which has the tag
-        --cs_out            Generate csharp code
+    -o, --output=cs,cpp     Generate cs,cpp bindings
         --loader_name=      Config loader class name
         --package_name=     Proto package name
 ''' % (sys.argv[0])
@@ -398,13 +402,12 @@ def init_output_paths(output_dir):
     os.makedirs(PROTO_OUTPUT_PATH)
     os.makedirs(PYTHON_OUTPUT_PATH)
     os.makedirs(BYTES_OUTPUT_PATH)
-    os.makedirs(CS_OUTPUT_PATH)
 
 
 if __name__ == '__main__' :
     try:
         opt, args = getopt.getopt(sys.argv[1:],
-            "ht:", ["help", "output=", "tag=", "package_name=", "loader_name="])
+            "ht:o:", ["help", "output=", "tag=", "package_name=", "loader_name="])
     except getopt.GetoptError, err:
         print "err:", (err)
         usage()
@@ -418,7 +421,7 @@ if __name__ == '__main__' :
     xls_file_path = args[0]
     output_dir = args[1]
 
-    output_codes = []
+    output = []
     tag = None
     for op, value in opt:
         if op == "-h" or op == "--help":
@@ -426,8 +429,8 @@ if __name__ == '__main__' :
             sys.exit(0)
         elif op == "-t" or op == "--tag":
             tag = value
-        elif op == "--cs_cout":
-            output_codes.append("cs")
+        elif op == "-o" or op == "--output":
+            output = value.split(',')
         elif op == "--loader_name":
             # TODO: Check if it's a valid type name
             value = value.strip()
@@ -444,7 +447,7 @@ if __name__ == '__main__' :
     sys.path.append(PYTHON_OUTPUT_PATH)
 
     try:
-        process_path(xls_file_path, output_dir, tag)
+        process_path(xls_file_path, tag, output)
     except BaseException, info:
         print info
         raise
