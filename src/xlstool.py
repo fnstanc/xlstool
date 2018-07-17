@@ -394,6 +394,11 @@ def init_output_paths(output_dir):
     if os.path.exists(output_dir):
         shutil.rmtree(output_dir)
 
+    global PROTO_OUTPUT_PATH
+    global BYTES_OUTPUT_PATH
+    global PYTHON_OUTPUT_PATH
+    global CS_OUTPUT_PATH
+
     PROTO_OUTPUT_PATH = os.path.join(output_dir, "proto")
     BYTES_OUTPUT_PATH = os.path.join(output_dir, "bytes")
     PYTHON_OUTPUT_PATH = os.path.join(output_dir, "py")
