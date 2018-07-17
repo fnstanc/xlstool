@@ -30,7 +30,7 @@ PYTHON_OUTPUT_PATH = OUTPUT_PATH + "py/"
 FIELD_NAME_ROW = 0
 FIELD_TYPE_ROW = 1
 FIELD_COMMENT_ROW = 2
-GROUP_FILTER_ROW = 3
+TAG_FILTER_ROW = 3
 DATA_BEGIN_ROW = 4
 DATA_BEGIN_COL = 1
 ID_COL = 0
@@ -99,7 +99,7 @@ def get_bytes_path(sheet_name):
     return os.path.join(BYTES_OUTPUT_PATH, sheet_name + ".bytes")
 
 
-def parse_fields(sheet_name, sheet, group):
+def parse_fields(sheet_name, sheet, tag):
     """
     Parse sheet headers and return field definitions.
     """
@@ -126,9 +126,9 @@ def parse_fields(sheet_name, sheet, group):
         need_export_filed = True
         if field_name.startswith("#") or field_name.startswith("_"):
             need_export_filed = False
-        elif group is not None:
-            curr_filed_groups = sheet.cell_value(GROUP_FILTER_ROW, i).encode("utf-8").strip()
-            need_export_filed = group in curr_filed_groups
+        elif tag is not None:
+            curr_filed_tags = sheet.cell_value(TAG_FILTER_ROW, i).encode("utf-8").strip()
+            need_export_filed = tag in curr_filed_tags
 
         if not need_export_filed:
             LOG_DEBUG("Skip col: %s,%s" % (field_name, i))
@@ -337,7 +337,7 @@ def files_within(file_path, pattern="*"):
                 yield os.path.join(dirpath, file_name)
 
 
-def parse_xls_sheet_meta(file_path, group):
+def parse_xls_sheet_meta(file_path, tag):
     all_sheet_names = {}
     all_sheet_metas = {}
     for xls_file_path in files_within(file_path, pattern="*.xls"):
@@ -357,7 +357,7 @@ def parse_xls_sheet_meta(file_path, group):
 
             LOG_INFO("Parsing sheet: " + sheet_name)
             sheet = workbook.sheet_by_name(sheet_name)
-            sheet_meta = parse_fields(sheet_name, sheet, group)
+            sheet_meta = parse_fields(sheet_name, sheet, tag)
             if sheet_meta is None:
                 continue
             sheet_metas.append(sheet_meta)
@@ -367,8 +367,8 @@ def parse_xls_sheet_meta(file_path, group):
     return all_sheet_metas
 
 
-def process_path(file_path, output, group):
-    all_sheet_metas = parse_xls_sheet_meta(file_path, group)
+def process_path(file_path, output, tag):
+    all_sheet_metas = parse_xls_sheet_meta(file_path, tag)
     gen_proto(all_sheet_metas)
     gen_binary(all_sheet_metas)
 
@@ -379,13 +379,13 @@ Usage: %s [options] excel_file
 option:
     -h, --help
     -o, --output=   proto, bytes
-    -g, --group=    only export the specific field of the group
+    -t, --tag=    only export fields which has the tag
 ''' % (sys.argv[0])
 
 
 if __name__ == '__main__' :
     try:
-        opt, args = getopt.getopt(sys.argv[1:], "ho:g:", ["help", "output=", "group="])
+        opt, args = getopt.getopt(sys.argv[1:], "ho:t:", ["help", "output=", "tag="])
     except getopt.GetoptError, err:
         print "err:", (err)
         usage()
@@ -397,7 +397,7 @@ if __name__ == '__main__' :
         xls_file_path = "."
 
     output = None
-    group = None
+    tag = None
     for op, value in opt:
         if op == "-h" or op == "--help":
             usage()
@@ -405,8 +405,8 @@ if __name__ == '__main__' :
         elif op == "-o" or op == "--output":
             output = list()
             output.append(value)
-        elif op == "-g" or op == "--group":
-            group = value
+        elif op == "-t" or op == "--tag":
+            tag = value
 
     if os.path.exists(OUTPUT_PATH):
         shutil.rmtree(OUTPUT_PATH)
@@ -418,7 +418,7 @@ if __name__ == '__main__' :
     sys.path.append(PYTHON_OUTPUT_PATH)
 
     try:
-        process_path(xls_file_path, output, group)
+        process_path(xls_file_path, output, tag)
     except BaseException, info:
         print info
         raise

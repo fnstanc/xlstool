@@ -5,4 +5,4 @@
 # Created Time: 2018/7/12 13:15:37
 
 export PATH=$PATH:./tool
-python ./src/xlstool.py -g c ./example
+python ./src/xlstool.py -t c ./example
