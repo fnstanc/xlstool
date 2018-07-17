@@ -44,7 +44,7 @@ def output_member_init_code_snippet(full_type_name, short_type_name, indent, out
 
 
 def begin_init_function(package_name, datablocks_name, indent):
-    line = ' ' * indent + "public static void Init({}.{} dataBlocks, System.Action<bool> callback) {{\n"
+    line = ' ' * indent + "public static void Init({}.{} dataBlocks) {{\n"
     return line.format(package_name, datablocks_name)
 
 
