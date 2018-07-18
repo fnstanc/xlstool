@@ -28,9 +28,9 @@ BYTES_OUTPUT_PATH = "./output/bytes/"
 PYTHON_OUTPUT_PATH = "./output/py/"
 CS_OUTPUT_PATH = "./output/cs/"
 
-FIELD_NAME_ROW = 0
-FIELD_TYPE_ROW = 1
-FIELD_COMMENT_ROW = 2
+FIELD_COMMENT_ROW = 0
+FIELD_NAME_ROW = 1
+FIELD_TYPE_ROW = 2
 TAG_FILTER_ROW = 3
 DATA_BEGIN_ROW = 4
 DATA_BEGIN_COL = 1
@@ -135,7 +135,10 @@ def parse_fields(sheet_name, sheet, tag):
         field_type = sheet.cell_value(FIELD_TYPE_ROW, i).encode("utf-8").strip()
 
         if field_type not in SUPPORTED_TYPES:
-            raise Exception("Unsupported type: field: %s, type: %s" % (field_name, field_type))
+            if field_type == "int":
+                field_type = "int32"
+            else:
+                raise Exception("Unsupported type: field: %s, type: %s" % (field_name, field_type))
 
         # merge fields if names and types are match
         if not sheet_meta.has_field(field_name):
@@ -345,7 +348,7 @@ def parse_xls_sheet_meta(file_path, tag):
         sheet_metas = []
         for name in sheet_names:
             sheet_name = name.encode("utf-8").strip()
-            if sheet_name.startswith("#") or sheet_name.startswith("Sheet"):
+            if sheet_name.startswith("_") or sheet_name.startswith("#") or sheet_name.startswith("Sheet"):
                 continue
 
             if sheet_name in all_sheet_names:
