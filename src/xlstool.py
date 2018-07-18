@@ -374,9 +374,9 @@ def process_path(file_path, tag, output):
     gen_binary(all_sheet_metas)
 
     if "cs" in output:
-        from codegen import unity_csharp_codegen
+        from codegen import protobuf_net_codegen
         LOG_INFO("==> Generating csharp binding")
-        unity_csharp_codegen.gen_code(PACKAGE_NAME, LOADER_CLASS_NAME,
+        protobuf_net_codegen.gen_code(PACKAGE_NAME, LOADER_CLASS_NAME,
             DATA_BLOCKS_STRUCT_NAME, all_sheet_metas, CS_OUTPUT_PATH)
 
     LOG_INFO("*** DONE ***")
