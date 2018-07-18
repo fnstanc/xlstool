@@ -6,7 +6,7 @@
 # Created Time: 2018/7/15 15:13:33
 
 
-PROTOGEN_BIN = "protogen"
+TAB_WIDTH = 4
 
 
 def output_cs_file_header(package_name, loader_name, file_name):
@@ -37,26 +37,29 @@ def output_loader_class_member(full_type_name, short_type_name, indent, output):
 
 def output_member_init_code_snippet(full_type_name, short_type_name, indent, output):
     space = ' ' * indent
+    body_space = ' ' * (indent + TAB_WIDTH)
     output.append("{}for (int i = 0; i < dataBlocks.{}_items.Count; ++i) {{\n".format(space, short_type_name))
-    output.append("{}    var item = dataBlocks.{}_items[i];\n".format(space, short_type_name))
-    output.append("{}    {}_items[item.id] = item;\n".format(space, short_type_name))
+    output.append("{}var item = dataBlocks.{}_items[i];\n".format(body_space , short_type_name))
+    output.append("{}{}_items[item.id] = item;\n".format(body_space, short_type_name))
     output.append(space +"}\n")
 
 
 def begin_init_function(package_name, datablocks_name, indent):
     line = ' ' * indent + "public static void Init({}.{} dataBlocks) {{\n"
+    line += "#region Init\n"
     return line.format(package_name, datablocks_name)
 
 
 def end_init_fundtion(indent):
-    return ' ' * indent + "}\n\n"
+    return "#endregion\n" + ' ' * indent + "}\n\n"
 
 
 def output_item_getter_function(full_type_name, sheet_name, indent, output):
+    body_space = ' ' * (indent + TAB_WIDTH)
     output.append(' ' * indent + "public static {} {}(int id) {{\n".format(full_type_name, sheet_name))
-    output.append(' ' * indent + "    {} item;\n".format(full_type_name))
-    output.append(' ' * indent + "    {}_items.TryGetValue(id, out item);\n".format(sheet_name))
-    output.append(' ' * indent + "    return item;\n".format(sheet_name))
+    output.append(body_space + "{} item;\n".format(full_type_name))
+    output.append(body_space + "{}_items.TryGetValue(id, out item);\n".format(sheet_name))
+    output.append(body_space + "return item;\n".format(sheet_name))
     output.append(' ' * indent + "}\n\n")
 
 
@@ -68,6 +71,7 @@ def gen_code(package_name, loader_name, datablocks_name, all_sheet_metas, output
     member_lines = []
     member_init_codes = []
     getter_functions = []
+    member_lines.append("#region DataBlocks\n")
     for xls_file, sheet_metas in all_sheet_metas.items():
         for sheet_meta in sheet_metas:
             sheet_name = sheet_meta.sheet_name
@@ -80,7 +84,7 @@ def gen_code(package_name, loader_name, datablocks_name, all_sheet_metas, output
             output_member_init_code_snippet(full_type_name, sheet_name, 8, member_init_codes)
 
             output_item_getter_function(full_type_name, sheet_name, 4, getter_functions)
-    member_lines.append('\n')
+    member_lines.append('#endregion\n\n')
 
     import os
     file_name = loader_name + ".cs"
