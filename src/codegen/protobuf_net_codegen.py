@@ -31,7 +31,7 @@ def output_cs_file_tail():
 
 
 def output_loader_class_member(full_type_name, short_type_name, indent, output):
-    member = ' ' * indent + "private static readonly Dictionary<int, {}> {}_items = new Dictionary<int, {}>();\n"
+    member = ' ' * indent + "private static readonly Dictionary<int, {}> {}_items_ = new Dictionary<int, {}>();\n"
     output.append(member.format(full_type_name, short_type_name, full_type_name))
 
 
@@ -40,25 +40,36 @@ def output_member_init_code_snippet(full_type_name, short_type_name, indent, out
     body_space = ' ' * (indent + TAB_WIDTH)
     output.append("{}for (int i = 0; i < dataBlocks.{}_items.Count; ++i) {{\n".format(space, short_type_name))
     output.append("{}var item = dataBlocks.{}_items[i];\n".format(body_space , short_type_name))
-    output.append("{}{}_items[item.id] = item;\n".format(body_space, short_type_name))
+    output.append("{}{}_items_[item.id] = item;\n".format(body_space, short_type_name))
     output.append(space +"}\n")
 
 
 def begin_init_function(package_name, datablocks_name, indent):
-    line = ' ' * indent + "public static void Init({}.{} dataBlocks) {{\n"
-    line += "#region Init\n"
-    return line.format(package_name, datablocks_name)
+    space = ' ' * indent
+    body_space = ' ' * (indent + TAB_WIDTH)
+
+    content = space + "public static bool Init(byte[] bytes) {{\n"
+    content += "#region Init\n"
+    content += body_space + "var dataBlocks = ProtoBuf.Serializer.Deserialize<{}.{}>(new System.IO.MemoryStream(bytes));\n"
+    content += body_space + "if (dataBlocks == null) return false;\n"
+
+    return content.format(package_name, datablocks_name)
 
 
 def end_init_fundtion(indent):
-    return "#endregion\n" + ' ' * indent + "}\n\n"
+    space = ' ' * indent
+    body_space = ' ' * (indent + TAB_WIDTH)
+    content = body_space + "return true;\n"
+    content += "#endregion\n"
+    content += space + "}\n\n"
+    return content
 
 
 def output_item_getter_function(full_type_name, sheet_name, indent, output):
     body_space = ' ' * (indent + TAB_WIDTH)
     output.append(' ' * indent + "public static {} {}(int id) {{\n".format(full_type_name, sheet_name))
     output.append(body_space + "{} item;\n".format(full_type_name))
-    output.append(body_space + "{}_items.TryGetValue(id, out item);\n".format(sheet_name))
+    output.append(body_space + "{}_items_.TryGetValue(id, out item);\n".format(sheet_name))
     output.append(body_space + "return item;\n".format(sheet_name))
     output.append(' ' * indent + "}\n\n")
 
