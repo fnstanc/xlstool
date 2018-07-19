@@ -1,2 +1,6 @@
 output
 *.pyc
+example/unity-example/*.sln
+example/unity-example/Library
+example/unity-example/Temp
+example/unity-example/*.csproj

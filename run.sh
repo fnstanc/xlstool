@@ -14,3 +14,6 @@ for filename in ./output/proto/*.proto; do
     protoc -I ./output/proto --cpp_out=./output/cpp/ $filename
     protogen -i:$filename -o:"./output/cs/$(basename $filename .proto).cs"
 done
+
+cp ./output/bytes/ConfigData.bytes ./example/unity-example/Assets/Resources
+cp ./output/cs/* ./example/unity-example/Assets/Scripts/Proto
