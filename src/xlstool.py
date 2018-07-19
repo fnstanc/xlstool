@@ -27,6 +27,7 @@ PROTO_OUTPUT_PATH = "./output/proto/"
 BYTES_OUTPUT_PATH = "./output/bytes/"
 PYTHON_OUTPUT_PATH = "./output/py/"
 CS_OUTPUT_PATH = "./output/cs/"
+CPP_OUTPUT_PATH = "./output/cpp/"
 
 FIELD_COMMENT_ROW = 0
 FIELD_NAME_ROW = 1
@@ -378,6 +379,12 @@ def process_path(file_path, tag, output):
         protobuf_net_codegen.gen_code(PACKAGE_NAME, LOADER_CLASS_NAME,
                                       DATA_BLOCKS_STRUCT_NAME, all_sheet_metas, CS_OUTPUT_PATH)
 
+    if "cpp" in output:
+        from codegen import cpp_codegen
+        LOG_INFO("==> Generating cpp binding")
+        cpp_codegen.gen_code(PACKAGE_NAME, LOADER_CLASS_NAME,
+                             DATA_BLOCKS_STRUCT_NAME, all_sheet_metas, CPP_OUTPUT_PATH)
+
     LOG_INFO("*** DONE ***")
 
 
@@ -401,11 +408,13 @@ def init_output_paths(output_dir):
     global BYTES_OUTPUT_PATH
     global PYTHON_OUTPUT_PATH
     global CS_OUTPUT_PATH
+    global CPP_OUTPUT_PATH
 
     PROTO_OUTPUT_PATH = os.path.join(output_dir, "proto")
     BYTES_OUTPUT_PATH = os.path.join(output_dir, "bytes")
     PYTHON_OUTPUT_PATH = os.path.join(output_dir, "py")
     CS_OUTPUT_PATH = os.path.join(output_dir, "cs")
+    CPP_OUTPUT_PATH = os.path.join(output_dir, "cpp")
 
     os.makedirs(PROTO_OUTPUT_PATH)
     os.makedirs(PYTHON_OUTPUT_PATH)
@@ -420,14 +429,6 @@ if __name__ == '__main__':
         print "err:", (err)
         usage()
         sys.exit(-1)
-
-    if len(args) < 2:
-        print "not enough arguments."
-        usage()
-        sys.exit(-1)
-
-    xls_file_path = args[0]
-    output_dir = args[1]
 
     output = []
     tag = None
@@ -449,6 +450,14 @@ if __name__ == '__main__':
             value = value.strip()
             if len(value) > 0:
                 PACKAGE_NAME = value
+
+    if len(args) < 2:
+        print "not enough arguments."
+        usage()
+        sys.exit(-1)
+
+    xls_file_path = args[0]
+    output_dir = args[1]
 
     init_output_paths(output_dir)
 
