@@ -32,7 +32,7 @@ def begin_class(name, indent):
 
 
 def end_class(name, indent):
-    return ' ' * indent + "} // %s\n" % name
+    return ' ' * indent + "}; // %s\n" % name
 
 
 def output_cs_file_tail():
@@ -44,46 +44,40 @@ def include_sheet_data_strut(sheet_name):
 
 
 def output_data_root(package_name, datablocks_name, indent):
-    data_root = "{}static {}.{} data_root_;\n".format(' ' * indent, package_name, datablocks_name)
+    data_root = "{}{}::{} data_root_;\n".format(' ' * indent, package_name, datablocks_name)
     return data_root
 
 
 def output_member(full_type_name, short_type_name, indent):
-    member = "{}static std::map<int, const {} *> {}_items_;\n".format(' ' * indent, full_type_name, short_type_name)
+    member = "{}std::map<int, const {} *> {}_items_;\n".format(' ' * indent, full_type_name, short_type_name)
     return member
 
 
 def output_getter_function(full_type_name, short_type_name, indent, output):
     body_space = ' ' * (indent + TAB_WIDTH)
-    output.append(' ' * indent + "static const {} *{}(int id) {{\n".format(full_type_name, short_type_name))
-    output.append(body_space + "auto iter = {}_items.find(id);\n".format(short_type_name))
-    output.append(body_space + "if(iter != {}_items.end()) return iter->second;\n".format(short_type_name))
+    output.append(' ' * indent + "const {} *{}(int id) {{\n".format(full_type_name, short_type_name))
+    output.append(body_space + "auto iter = {}_items_.find(id);\n".format(short_type_name))
+    output.append(body_space + "if(iter != {}_items_.end()) return iter->second;\n".format(short_type_name))
     output.append(body_space + "return nullptr;\n".format(short_type_name))
     output.append(' ' * indent + "}\n\n")
 
 
 def output_init_function(package_name, all_sheet_metas, indent, output):
-    output.append(' ' * indent + "static bool Init(const string &bytes) {\n")
+    output.append(' ' * indent + "bool Init(const std::string &bytes) {\n")
     body_indent = ' ' * (indent + TAB_WIDTH)
     output.append(body_indent + "if (!data_root_.ParseFromString(bytes)) return false;\n")
-
-    template = \
-'''for(int i = 0; i < data_root_.Goods_items_size(); ++i) {
-    const ConfigData.Goods &item = data_root_.Goods_items(i);
-    Goods_items_[item.id()] = &item;
-}
-            '''
 
     for xls_file, sheet_metas in all_sheet_metas.items():
         for sheet_meta in sheet_metas:
             short_type_name = sheet_meta.sheet_name
-            full_type_name = "{}.{}".format(package_name, short_type_name)
+            lower_shot_type_name = short_type_name.lower()
+            full_type_name = "{}::{}".format(package_name, short_type_name)
             output.append(body_indent +
-                          "for(int i = 0; i < data_root_.{}_items_size(); ++i) {{\n".format(short_type_name))
+                          "for(int i = 0; i < data_root_.{}_items_size(); ++i) {{\n".format(lower_shot_type_name))
             output.append(body_indent + ' ' * TAB_WIDTH +
-                          "const {} &item = data_root_.{}_items(i);\n".format(full_type_name, short_type_name))
+                          "const {} &item = data_root_.{}_items(i);\n".format(full_type_name, lower_shot_type_name))
             output.append(body_indent + ' ' * TAB_WIDTH +
-                          "{}_items_[item.id()] = item;\n".format(full_type_name, short_type_name))
+                          "{}_items_[item.id()] = &item;\n".format(short_type_name))
             output.append(body_indent + "}\n")
 
     output.append(body_indent + "return true;\n")
@@ -97,6 +91,8 @@ def gen_code(package_name, loader_name, datablocks_name, all_sheet_metas, output
 
     include_lines = []
     include_lines.append("#include <map>\n")
+    include_lines.append("#include <string>\n")
+    include_lines.append(include_sheet_data_strut(datablocks_name))
 
     member_lines = []
 
@@ -109,7 +105,7 @@ def gen_code(package_name, loader_name, datablocks_name, all_sheet_metas, output
     for xls_file, sheet_metas in all_sheet_metas.items():
         for sheet_meta in sheet_metas:
             sheet_name = sheet_meta.sheet_name
-            full_type_name = "{}.{}".format(package_name, sheet_name)
+            full_type_name = "{}::{}".format(package_name, sheet_name)
             include_lines.append(include_sheet_data_strut(sheet_name))
             member_lines.append(output_member(full_type_name, sheet_name, TAB_WIDTH))
             output_getter_function(full_type_name, sheet_name, TAB_WIDTH, member_functions);
