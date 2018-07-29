@@ -16,7 +16,7 @@ def output_cpp_file_header(file_name):
 */
 
 '''
-    return header
+    return header % file_name
 
 
 def begin_namescpce(ns):
