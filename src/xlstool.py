@@ -192,9 +192,15 @@ def output_id_filed(content):
 
 
 def gen_python_source(proto_file):
-    cmd = "%s -I %s --python_out=%s %s"\
-        % (PROTOC_BIN, PROTO_OUTPUT_PATH, PYTHON_OUTPUT_PATH, proto_file)
-    subprocess.check_call(cmd, shell=False)
+    #cmd = "%s -I %s --python_out=%s %s"\
+    #    % (PROTOC_BIN, PROTO_OUTPUT_PATH, PYTHON_OUTPUT_PATH, proto_file)
+    args = [
+        PROTOC_BIN,
+        "-I", PROTO_OUTPUT_PATH,
+        "--python_out=%s" % PYTHON_OUTPUT_PATH,
+        proto_file
+    ]
+    subprocess.check_call(args, shell=False)
 
 
 def gen_proto_for_sheet(sheet_meta):

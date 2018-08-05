@@ -1,5 +1,6 @@
 output
 *.pyc
+venv
 example/unity-example/*.sln
 example/unity-example/Library
 example/unity-example/Temp
