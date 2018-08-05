@@ -23,9 +23,8 @@ int main(int argc, char *argv[])
 
     auto goods = config_data.Goods(3403);
     if (goods) {
-        std::string str;
-        goods->SerializeToString(&str);
-        std::cout << str << std::endl;
+        std::cout << goods->itemname() << std::endl; 
+        std::cout << goods->DebugString() << std::endl;
     }
 
     return 0;
