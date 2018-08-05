@@ -83,7 +83,7 @@ def gen_code(package_name, loader_name, datablocks_name, all_sheet_metas, output
     member_init_codes = []
     getter_functions = []
     member_lines.append("#region DataBlocks\n")
-    for xls_file, sheet_metas in all_sheet_metas.items():
+    for xls_file, sheet_metas in list(all_sheet_metas.items()):
         for sheet_meta in sheet_metas:
             sheet_name = sheet_meta.sheet_name
             full_type_name = "{}.{}".format(package_name, sheet_name)

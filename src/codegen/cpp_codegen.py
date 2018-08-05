@@ -67,7 +67,7 @@ def output_init_function(package_name, all_sheet_metas, indent, output):
     body_indent = ' ' * (indent + TAB_WIDTH)
     output.append(body_indent + "if (!data_root_.ParseFromString(bytes)) return false;\n")
 
-    for xls_file, sheet_metas in all_sheet_metas.items():
+    for xls_file, sheet_metas in list(all_sheet_metas.items()):
         for sheet_meta in sheet_metas:
             short_type_name = sheet_meta.sheet_name
             lower_shot_type_name = short_type_name.lower()
@@ -102,7 +102,7 @@ def gen_code(package_name, loader_name, datablocks_name, all_sheet_metas, output
     member_functions = []
     member_functions.append("public:\n")
 
-    for xls_file, sheet_metas in all_sheet_metas.items():
+    for xls_file, sheet_metas in list(all_sheet_metas.items()):
         for sheet_meta in sheet_metas:
             sheet_name = sheet_meta.sheet_name
             full_type_name = "{}::{}".format(package_name, sheet_name)

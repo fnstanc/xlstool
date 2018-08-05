@@ -13,8 +13,6 @@ import shutil
 import subprocess
 import xlrd
 
-reload(sys)
-sys.setdefaultencoding("utf-8")
 
 logging.basicConfig(level=logging.DEBUG, format='%(levelname)s: %(message)s')
 logger = logging.getLogger()
@@ -105,7 +103,7 @@ def parse_fields(sheet_name, sheet, tag):
     ncols = sheet.ncols
     for i in range(DATA_BEGIN_COL, ncols):
         field_name = sheet.cell_value(
-            FIELD_NAME_ROW, i).encode("utf-8").strip()
+            FIELD_NAME_ROW, i).strip()
 
         if len(field_name) == 0:
             LOG_DEBUG("Skip col %s cause of empty field name" % i)
@@ -121,7 +119,7 @@ def parse_fields(sheet_name, sheet, tag):
             need_export_filed = False
         elif tag is not None:
             curr_filed_tags = sheet.cell_value(
-                TAG_FILTER_ROW, i).encode("utf-8").strip()
+                TAG_FILTER_ROW, i).strip()
             need_export_filed = tag in curr_filed_tags
 
         if not need_export_filed:
@@ -129,7 +127,7 @@ def parse_fields(sheet_name, sheet, tag):
             continue
 
         field_type = sheet.cell_value(
-            FIELD_TYPE_ROW, i).encode("utf-8").strip()
+            FIELD_TYPE_ROW, i).strip()
 
         if field_type not in SUPPORTED_TYPES:
             if field_type == "int":
@@ -140,7 +138,7 @@ def parse_fields(sheet_name, sheet, tag):
 
         # merge fields if names and types are match
         if not sheet_meta.has_field(field_name):
-            desc = unicode(sheet.cell_value(FIELD_COMMENT_ROW, i))
+            desc = str(sheet.cell_value(FIELD_COMMENT_ROW, i))
             sheet_meta.add_field(field_name, field_type, desc)
             sheet_meta.add_col_to_field(field_name, i)
         else:
@@ -235,7 +233,7 @@ def gen_proto(all_sheet_metas):
     message_body = []
 
     block_index = 1
-    for f, sheet_metas in all_sheet_metas.items():
+    for f, sheet_metas in list(all_sheet_metas.items()):
         for sheet_meta in sheet_metas:
             gen_proto_for_sheet(sheet_meta)
             sheet_name = sheet_meta.sheet_name
@@ -259,7 +257,7 @@ def gen_proto(all_sheet_metas):
 
 def get_field_value(cell, field_type):
     if field_type == "string":
-        return unicode(cell.value)
+        return str(cell.value)
 
     if cell.ctype == 0:
         return 0
@@ -272,8 +270,8 @@ def get_field_value(cell, field_type):
         finally:
             return 0
 
-    print cell.value
-    print cell.ctype
+    print(cell.value)
+    print(cell.ctype)
     raise Exception("type error")
     return None
 
@@ -306,7 +304,7 @@ def load_pymodule(struct_name):
 def gen_binary(all_sheet_metas):
     data_blocks_module = load_pymodule(DATA_BLOCKS_STRUCT_NAME)
     data_blocks = getattr(data_blocks_module, DATA_BLOCKS_STRUCT_NAME)()
-    for f, sheet_metas in all_sheet_metas.items():
+    for f, sheet_metas in list(all_sheet_metas.items()):
         workbook = xlrd.open_workbook(f)
         for sheet_meta in sheet_metas:
             sheet_name = sheet_meta.sheet_name
@@ -353,7 +351,7 @@ def parse_xls_sheet_meta(file_path, tag):
         sheet_names = workbook.sheet_names()
         sheet_metas = []
         for name in sheet_names:
-            sheet_name = name.encode("utf-8").strip()
+            sheet_name = name.strip()
             if sheet_name.startswith("_") or sheet_name.startswith("#") or sheet_name.startswith("Sheet"):
                 continue
 
@@ -395,7 +393,7 @@ def process_path(file_path, tag, output):
 
 
 def usage():
-    print '''
+    print('''
 Usage: %s [options] excel_file output_dir
 option:
     -h, --help
@@ -403,7 +401,7 @@ option:
     -o, --output=cs,cpp     Generate cs,cpp bindings
         --loader_name=      Config loader class name
         --package_name=     Proto package name
-''' % (sys.argv[0])
+''' % (sys.argv[0]))
 
 
 def init_output_paths(output_dir):
@@ -431,8 +429,8 @@ if __name__ == '__main__':
     try:
         opt, args = getopt.getopt(sys.argv[1:],
                                   "ht:o:", ["help", "output=", "tag=", "package_name=", "loader_name="])
-    except getopt.GetoptError, err:
-        print "err:", (err)
+    except getopt.GetoptError as err:
+        print("err:", (err))
         usage()
         sys.exit(-1)
 
@@ -458,7 +456,7 @@ if __name__ == '__main__':
                 PACKAGE_NAME = value
 
     if len(args) < 2:
-        print "not enough arguments."
+        print("not enough arguments.")
         usage()
         sys.exit(-1)
 
@@ -471,6 +469,6 @@ if __name__ == '__main__':
 
     try:
         process_path(xls_file_path, tag, output)
-    except BaseException, info:
-        print info
+    except BaseException as info:
+        print(info)
         raise

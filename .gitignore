@@ -1,5 +1,6 @@
 output
 *.pyc
+*.bak
 venv
 example/unity-example/*.sln
 example/unity-example/Library
