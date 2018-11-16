@@ -30,17 +30,17 @@ def output_cs_file_tail():
     return "}\n}\n"
 
 
-def output_loader_class_member(full_type_name, short_type_name, indent, output):
+def output_loader_class_member(type_name, indent, output):
     member = ' ' * indent + "private static readonly Dictionary<int, {}> {}_items_ = new Dictionary<int, {}>();\n"
-    output.append(member.format(full_type_name, short_type_name, full_type_name))
+    output.append(member.format(type_name, type_name, type_name))
 
 
-def output_member_init_code_snippet(full_type_name, short_type_name, indent, output):
+def output_member_init_code_snippet(type_name, indent, output):
     space = ' ' * indent
     body_space = ' ' * (indent + TAB_WIDTH)
-    output.append("{}for (int i = 0; i < dataBlocks.{}_items.Count; ++i) {{\n".format(space, short_type_name))
-    output.append("{}var item = dataBlocks.{}_items[i];\n".format(body_space , short_type_name))
-    output.append("{}{}_items_[item.id] = item;\n".format(body_space, short_type_name))
+    output.append("{}for (int i = 0; i < dataBlocks.{}_items.Count; ++i) {{\n".format(space, type_name))
+    output.append("{}var item = dataBlocks.{}_items[i];\n".format(body_space , type_name))
+    output.append("{}{}_items_[item.id] = item;\n".format(body_space, type_name))
     output.append(space +"}\n")
 
 
@@ -65,12 +65,12 @@ def end_init_fundtion(indent):
     return content
 
 
-def output_item_getter_function(full_type_name, sheet_name, indent, output):
+def output_item_getter_function(type_name, indent, output):
     body_space = ' ' * (indent + TAB_WIDTH)
-    output.append(' ' * indent + "public static {} {}(int id) {{\n".format(full_type_name, sheet_name))
-    output.append(body_space + "{} item;\n".format(full_type_name))
-    output.append(body_space + "{}_items_.TryGetValue(id, out item);\n".format(sheet_name))
-    output.append(body_space + "return item;\n".format(sheet_name))
+    output.append(' ' * indent + "public static {} Get{}(int id) {{\n".format(type_name, type_name))
+    output.append(body_space + "{} item;\n".format(type_name))
+    output.append(body_space + "{}_items_.TryGetValue(id, out item);\n".format(type_name))
+    output.append(body_space + "return item;\n".format(type_name))
     output.append(' ' * indent + "}\n\n")
 
 
@@ -86,15 +86,14 @@ def gen_code(package_name, loader_name, datablocks_name, all_sheet_metas, output
     for xls_file, sheet_metas in list(all_sheet_metas.items()):
         for sheet_meta in sheet_metas:
             sheet_name = sheet_meta.sheet_name
-            full_type_name = "{}.{}".format(package_name, sheet_name)
 
             # output member for data loader class
-            output_loader_class_member(full_type_name, sheet_name, 4, member_lines)
+            output_loader_class_member(sheet_name, 4, member_lines)
 
             # output member initialization codes
-            output_member_init_code_snippet(full_type_name, sheet_name, 8, member_init_codes)
+            output_member_init_code_snippet(sheet_name, 8, member_init_codes)
 
-            output_item_getter_function(full_type_name, sheet_name, 4, getter_functions)
+            output_item_getter_function(sheet_name, 4, getter_functions)
     member_lines.append('#endregion\n\n')
 
     import os

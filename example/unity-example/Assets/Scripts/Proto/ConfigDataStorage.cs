@@ -7,28 +7,28 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generated from: output/proto/DataBlocks.proto
-// Note: requires additional types generated from: Skill.proto
+// Generated from: output/proto/ConfigDataStorage.proto
 // Note: requires additional types generated from: Goods.proto
+// Note: requires additional types generated from: Skill.proto
 namespace MyGame
 {
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"DataBlocks")]
-  public partial class DataBlocks : global::ProtoBuf.IExtensible
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ConfigDataStorage")]
+  public partial class ConfigDataStorage : global::ProtoBuf.IExtensible
   {
-    public DataBlocks() {}
+    public ConfigDataStorage() {}
     
-    private readonly global::System.Collections.Generic.List<MyGame.Skill> _Skill_items = new global::System.Collections.Generic.List<MyGame.Skill>();
-    [global::ProtoBuf.ProtoMember(1, Name=@"Skill_items", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<MyGame.Skill> Skill_items
-    {
-      get { return _Skill_items; }
-    }
-  
     private readonly global::System.Collections.Generic.List<MyGame.Goods> _Goods_items = new global::System.Collections.Generic.List<MyGame.Goods>();
-    [global::ProtoBuf.ProtoMember(2, Name=@"Goods_items", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    [global::ProtoBuf.ProtoMember(1, Name=@"Goods_items", DataFormat = global::ProtoBuf.DataFormat.Default)]
     public global::System.Collections.Generic.List<MyGame.Goods> Goods_items
     {
       get { return _Goods_items; }
+    }
+  
+    private readonly global::System.Collections.Generic.List<MyGame.Skill> _Skill_items = new global::System.Collections.Generic.List<MyGame.Skill>();
+    [global::ProtoBuf.ProtoMember(2, Name=@"Skill_items", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<MyGame.Skill> Skill_items
+    {
+      get { return _Skill_items; }
     }
   
     private global::ProtoBuf.IExtension extensionObject;

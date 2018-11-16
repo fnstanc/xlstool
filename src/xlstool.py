@@ -37,9 +37,10 @@ ID_COL = 0
 
 PROTOC_BIN = "protoc"
 ID_FIELD_NAME = "id"
-DATA_BLOCKS_STRUCT_NAME = "DataBlocks"
-LOADER_CLASS_NAME = "DataCenter"
+
 PACKAGE_NAME = "AppConfig"
+LOADER_CLASS_NAME = "DataCenter"
+DATA_BLOCKS_STRUCT_NAME = LOADER_CLASS_NAME + "Storage"
 
 INTEGER_TYPES = ["int32", "int64", "uint32", "uint64"]
 FRACTION_TYPES = ["float", "double"]
@@ -225,7 +226,7 @@ def gen_proto_for_sheet(sheet_meta):
     with open(proto_file, "w+") as f:
         f.writelines(content)
 
-    gen_python_source(file_name)
+    gen_python_source(proto_file)
 
 
 def gen_proto(all_sheet_metas):
@@ -252,7 +253,7 @@ def gen_proto(all_sheet_metas):
         content.extend(message_body)
         output_struct_tail(DATA_BLOCKS_STRUCT_NAME, content)
         f.writelines(content)
-    gen_python_source(fname)
+    gen_python_source(fpath)
 
 
 def get_field_value(cell, field_type):
@@ -449,6 +450,7 @@ if __name__ == '__main__':
             value = value.strip()
             if len(value) > 0:
                 LOADER_CLASS_NAME = value
+                DATA_BLOCKS_STRUCT_NAME = LOADER_CLASS_NAME + "Storage"
         elif op == "--package_name":
             # TODO: Check if it's a valid type name
             value = value.strip()
