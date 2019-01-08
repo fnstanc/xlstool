@@ -76,7 +76,7 @@ const ${type} *${loader_name}::${type}_items(int index) {
     return &item;
 }
 
-const ${type} *${loader_name}::get${type}(int id) {
+const ${type} *${loader_name}::${type}_find(int id) {
     auto iter = ${type}_items_.find(id);
     if(iter != ${type}_items_.end()) return iter->second;
     return nullptr;
@@ -117,7 +117,7 @@ def gen_cpp_header_file(package_name, loader_name,
             )
 
             getter_lines.append(
-                "const {} *get{}(int id);".format(sheet_name, sheet_name)
+                "const {} *{}_find(int id);".format(sheet_name, sheet_name)
             )
 
     include_lines.append("#include \"{}.pb.h\"".format(datablocks_name))

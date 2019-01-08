@@ -28,7 +28,7 @@ const Goods *ConfigData::Goods_items(int index) {
     return &item;
 }
 
-const Goods *ConfigData::getGoods(int id) {
+const Goods *ConfigData::Goods_find(int id) {
     auto iter = Goods_items_.find(id);
     if(iter != Goods_items_.end()) return iter->second;
     return nullptr;
@@ -43,7 +43,7 @@ const Skill *ConfigData::Skill_items(int index) {
     return &item;
 }
 
-const Skill *ConfigData::getSkill(int id) {
+const Skill *ConfigData::Skill_find(int id) {
     auto iter = Skill_items_.find(id);
     if(iter != Skill_items_.end()) return iter->second;
     return nullptr;

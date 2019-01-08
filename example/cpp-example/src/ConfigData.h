@@ -17,10 +17,10 @@ public:
     bool init(const std::string &bytes);
     int Goods_items_size();
     const Goods *Goods_items(int index);
-    const Goods *getGoods(int id);
+    const Goods *Goods_find(int id);
     int Skill_items_size();
     const Skill *Skill_items(int index);
-    const Skill *getSkill(int id);
+    const Skill *Skill_find(int id);
 
 private:
     ConfigDataStorage data_root_;

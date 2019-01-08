@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    auto goods = config_data.getGoods(3403);
+    auto goods = config_data.Goods_find(3403);
     if (goods) {
         std::cout << goods->DebugString() << std::endl;
     }
