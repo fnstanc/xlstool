@@ -85,13 +85,6 @@ class Goods : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
     return *this;
   }
   #endif
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _internal_metadata_.unknown_fields();
-  }
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return _internal_metadata_.mutable_unknown_fields();
-  }
-
   static const ::google::protobuf::Descriptor* descriptor();
   static const Goods& default_instance();
 
@@ -153,8 +146,7 @@ class Goods : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
 
   // accessors -------------------------------------------------------
 
-  // optional string itemName = 2;
-  bool has_itemname() const;
+  // string itemName = 2;
   void clear_itemname();
   static const int kItemNameFieldNumber = 2;
   const ::std::string& itemname() const;
@@ -168,36 +160,31 @@ class Goods : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::std::string* release_itemname();
   void set_allocated_itemname(::std::string* itemname);
 
-  // optional int32 id = 1;
-  bool has_id() const;
+  // int32 id = 1;
   void clear_id();
   static const int kIdFieldNumber = 1;
   ::google::protobuf::int32 id() const;
   void set_id(::google::protobuf::int32 value);
 
-  // optional int32 itemLV = 3;
-  bool has_itemlv() const;
+  // int32 itemLV = 3;
   void clear_itemlv();
   static const int kItemLVFieldNumber = 3;
   ::google::protobuf::int32 itemlv() const;
   void set_itemlv(::google::protobuf::int32 value);
 
-  // optional int32 UseMinLV = 4;
-  bool has_useminlv() const;
+  // int32 UseMinLV = 4;
   void clear_useminlv();
   static const int kUseMinLVFieldNumber = 4;
   ::google::protobuf::int32 useminlv() const;
   void set_useminlv(::google::protobuf::int32 value);
 
-  // optional int32 itemMinLvl = 5;
-  bool has_itemminlvl() const;
+  // int32 itemMinLvl = 5;
   void clear_itemminlvl();
   static const int kItemMinLvlFieldNumber = 5;
   ::google::protobuf::int32 itemminlvl() const;
   void set_itemminlvl(::google::protobuf::int32 value);
 
-  // optional int32 itemMaxLvl = 6;
-  bool has_itemmaxlvl() const;
+  // int32 itemMaxLvl = 6;
   void clear_itemmaxlvl();
   static const int kItemMaxLvlFieldNumber = 6;
   ::google::protobuf::int32 itemmaxlvl() const;
@@ -205,28 +192,15 @@ class Goods : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
 
   // @@protoc_insertion_point(class_scope:MyGame.Goods)
  private:
-  void set_has_id();
-  void clear_has_id();
-  void set_has_itemname();
-  void clear_has_itemname();
-  void set_has_itemlv();
-  void clear_has_itemlv();
-  void set_has_useminlv();
-  void clear_has_useminlv();
-  void set_has_itemminlvl();
-  void clear_has_itemminlvl();
-  void set_has_itemmaxlvl();
-  void clear_has_itemmaxlvl();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::google::protobuf::internal::HasBits<1> _has_bits_;
-  mutable ::google::protobuf::internal::CachedSize _cached_size_;
   ::google::protobuf::internal::ArenaStringPtr itemname_;
   ::google::protobuf::int32 id_;
   ::google::protobuf::int32 itemlv_;
   ::google::protobuf::int32 useminlv_;
   ::google::protobuf::int32 itemminlvl_;
   ::google::protobuf::int32 itemmaxlvl_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
   friend struct ::protobuf_Goods_2eproto::TableStruct;
 };
 // ===================================================================
@@ -240,56 +214,36 @@ class Goods : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
 #endif  // __GNUC__
 // Goods
 
-// optional int32 id = 1;
-inline bool Goods::has_id() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void Goods::set_has_id() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void Goods::clear_has_id() {
-  _has_bits_[0] &= ~0x00000002u;
-}
+// int32 id = 1;
 inline void Goods::clear_id() {
   id_ = 0;
-  clear_has_id();
 }
 inline ::google::protobuf::int32 Goods::id() const {
   // @@protoc_insertion_point(field_get:MyGame.Goods.id)
   return id_;
 }
 inline void Goods::set_id(::google::protobuf::int32 value) {
-  set_has_id();
+  
   id_ = value;
   // @@protoc_insertion_point(field_set:MyGame.Goods.id)
 }
 
-// optional string itemName = 2;
-inline bool Goods::has_itemname() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void Goods::set_has_itemname() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void Goods::clear_has_itemname() {
-  _has_bits_[0] &= ~0x00000001u;
-}
+// string itemName = 2;
 inline void Goods::clear_itemname() {
   itemname_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  clear_has_itemname();
 }
 inline const ::std::string& Goods::itemname() const {
   // @@protoc_insertion_point(field_get:MyGame.Goods.itemName)
   return itemname_.GetNoArena();
 }
 inline void Goods::set_itemname(const ::std::string& value) {
-  set_has_itemname();
+  
   itemname_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
   // @@protoc_insertion_point(field_set:MyGame.Goods.itemName)
 }
 #if LANG_CXX11
 inline void Goods::set_itemname(::std::string&& value) {
-  set_has_itemname();
+  
   itemname_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
   // @@protoc_insertion_point(field_set_rvalue:MyGame.Goods.itemName)
@@ -297,131 +251,88 @@ inline void Goods::set_itemname(::std::string&& value) {
 #endif
 inline void Goods::set_itemname(const char* value) {
   GOOGLE_DCHECK(value != NULL);
-  set_has_itemname();
+  
   itemname_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:MyGame.Goods.itemName)
 }
 inline void Goods::set_itemname(const char* value, size_t size) {
-  set_has_itemname();
+  
   itemname_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
   // @@protoc_insertion_point(field_set_pointer:MyGame.Goods.itemName)
 }
 inline ::std::string* Goods::mutable_itemname() {
-  set_has_itemname();
+  
   // @@protoc_insertion_point(field_mutable:MyGame.Goods.itemName)
   return itemname_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Goods::release_itemname() {
   // @@protoc_insertion_point(field_release:MyGame.Goods.itemName)
-  if (!has_itemname()) {
-    return NULL;
-  }
-  clear_has_itemname();
-  return itemname_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  
+  return itemname_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline void Goods::set_allocated_itemname(::std::string* itemname) {
   if (itemname != NULL) {
-    set_has_itemname();
+    
   } else {
-    clear_has_itemname();
+    
   }
   itemname_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), itemname);
   // @@protoc_insertion_point(field_set_allocated:MyGame.Goods.itemName)
 }
 
-// optional int32 itemLV = 3;
-inline bool Goods::has_itemlv() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void Goods::set_has_itemlv() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void Goods::clear_has_itemlv() {
-  _has_bits_[0] &= ~0x00000004u;
-}
+// int32 itemLV = 3;
 inline void Goods::clear_itemlv() {
   itemlv_ = 0;
-  clear_has_itemlv();
 }
 inline ::google::protobuf::int32 Goods::itemlv() const {
   // @@protoc_insertion_point(field_get:MyGame.Goods.itemLV)
   return itemlv_;
 }
 inline void Goods::set_itemlv(::google::protobuf::int32 value) {
-  set_has_itemlv();
+  
   itemlv_ = value;
   // @@protoc_insertion_point(field_set:MyGame.Goods.itemLV)
 }
 
-// optional int32 UseMinLV = 4;
-inline bool Goods::has_useminlv() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
-}
-inline void Goods::set_has_useminlv() {
-  _has_bits_[0] |= 0x00000008u;
-}
-inline void Goods::clear_has_useminlv() {
-  _has_bits_[0] &= ~0x00000008u;
-}
+// int32 UseMinLV = 4;
 inline void Goods::clear_useminlv() {
   useminlv_ = 0;
-  clear_has_useminlv();
 }
 inline ::google::protobuf::int32 Goods::useminlv() const {
   // @@protoc_insertion_point(field_get:MyGame.Goods.UseMinLV)
   return useminlv_;
 }
 inline void Goods::set_useminlv(::google::protobuf::int32 value) {
-  set_has_useminlv();
+  
   useminlv_ = value;
   // @@protoc_insertion_point(field_set:MyGame.Goods.UseMinLV)
 }
 
-// optional int32 itemMinLvl = 5;
-inline bool Goods::has_itemminlvl() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
-}
-inline void Goods::set_has_itemminlvl() {
-  _has_bits_[0] |= 0x00000010u;
-}
-inline void Goods::clear_has_itemminlvl() {
-  _has_bits_[0] &= ~0x00000010u;
-}
+// int32 itemMinLvl = 5;
 inline void Goods::clear_itemminlvl() {
   itemminlvl_ = 0;
-  clear_has_itemminlvl();
 }
 inline ::google::protobuf::int32 Goods::itemminlvl() const {
   // @@protoc_insertion_point(field_get:MyGame.Goods.itemMinLvl)
   return itemminlvl_;
 }
 inline void Goods::set_itemminlvl(::google::protobuf::int32 value) {
-  set_has_itemminlvl();
+  
   itemminlvl_ = value;
   // @@protoc_insertion_point(field_set:MyGame.Goods.itemMinLvl)
 }
 
-// optional int32 itemMaxLvl = 6;
-inline bool Goods::has_itemmaxlvl() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
-}
-inline void Goods::set_has_itemmaxlvl() {
-  _has_bits_[0] |= 0x00000020u;
-}
-inline void Goods::clear_has_itemmaxlvl() {
-  _has_bits_[0] &= ~0x00000020u;
-}
+// int32 itemMaxLvl = 6;
 inline void Goods::clear_itemmaxlvl() {
   itemmaxlvl_ = 0;
-  clear_has_itemmaxlvl();
 }
 inline ::google::protobuf::int32 Goods::itemmaxlvl() const {
   // @@protoc_insertion_point(field_get:MyGame.Goods.itemMaxLvl)
   return itemmaxlvl_;
 }
 inline void Goods::set_itemmaxlvl(::google::protobuf::int32 value) {
-  set_has_itemmaxlvl();
+  
   itemmaxlvl_ = value;
   // @@protoc_insertion_point(field_set:MyGame.Goods.itemMaxLvl)
 }

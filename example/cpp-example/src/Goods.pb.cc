@@ -48,7 +48,7 @@ void InitDefaults() {
 ::google::protobuf::Metadata file_level_metadata[1];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::MyGame::Goods, _has_bits_),
+  ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::MyGame::Goods, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
@@ -59,15 +59,9 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::MyGame::Goods, useminlv_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::MyGame::Goods, itemminlvl_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::MyGame::Goods, itemmaxlvl_),
-  1,
-  0,
-  2,
-  3,
-  4,
-  5,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, 11, sizeof(::MyGame::Goods)},
+  { 0, -1, sizeof(::MyGame::Goods)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -98,10 +92,10 @@ void AddDescriptorsImpl() {
       "\n\013Goods.proto\022\006MyGame\"o\n\005Goods\022\n\n\002id\030\001 \001"
       "(\005\022\020\n\010itemName\030\002 \001(\t\022\016\n\006itemLV\030\003 \001(\005\022\020\n\010"
       "UseMinLV\030\004 \001(\005\022\022\n\nitemMinLvl\030\005 \001(\005\022\022\n\nit"
-      "emMaxLvl\030\006 \001(\005"
+      "emMaxLvl\030\006 \001(\005b\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 134);
+      descriptor, 142);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "Goods.proto", &protobuf_RegisterTypes);
 }
@@ -141,11 +135,10 @@ Goods::Goods()
 }
 Goods::Goods(const Goods& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _has_bits_(from._has_bits_) {
+      _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   itemname_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (from.has_itemname()) {
+  if (from.itemname().size() > 0) {
     itemname_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.itemname_);
   }
   ::memcpy(&id_, &from.id_,
@@ -190,16 +183,10 @@ void Goods::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 0x00000001u) {
-    itemname_.ClearNonDefaultToEmptyNoArena();
-  }
-  if (cached_has_bits & 62u) {
-    ::memset(&id_, 0, static_cast<size_t>(
-        reinterpret_cast<char*>(&itemmaxlvl_) -
-        reinterpret_cast<char*>(&id_)) + sizeof(itemmaxlvl_));
-  }
-  _has_bits_.Clear();
+  itemname_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ::memset(&id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&itemmaxlvl_) -
+      reinterpret_cast<char*>(&id_)) + sizeof(itemmaxlvl_));
   _internal_metadata_.Clear();
 }
 
@@ -213,11 +200,11 @@ bool Goods::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional int32 id = 1;
+      // int32 id = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
-          set_has_id();
+
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &id_)));
@@ -227,27 +214,27 @@ bool Goods::MergePartialFromCodedStream(
         break;
       }
 
-      // optional string itemName = 2;
+      // string itemName = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(18u /* 18 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_itemname()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->itemname().data(), static_cast<int>(this->itemname().length()),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "MyGame.Goods.itemName");
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "MyGame.Goods.itemName"));
         } else {
           goto handle_unusual;
         }
         break;
       }
 
-      // optional int32 itemLV = 3;
+      // int32 itemLV = 3;
       case 3: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
-          set_has_itemlv();
+
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &itemlv_)));
@@ -257,11 +244,11 @@ bool Goods::MergePartialFromCodedStream(
         break;
       }
 
-      // optional int32 UseMinLV = 4;
+      // int32 UseMinLV = 4;
       case 4: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(32u /* 32 & 0xFF */)) {
-          set_has_useminlv();
+
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &useminlv_)));
@@ -271,11 +258,11 @@ bool Goods::MergePartialFromCodedStream(
         break;
       }
 
-      // optional int32 itemMinLvl = 5;
+      // int32 itemMinLvl = 5;
       case 5: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(40u /* 40 & 0xFF */)) {
-          set_has_itemminlvl();
+
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &itemminlvl_)));
@@ -285,11 +272,11 @@ bool Goods::MergePartialFromCodedStream(
         break;
       }
 
-      // optional int32 itemMaxLvl = 6;
+      // int32 itemMaxLvl = 6;
       case 6: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(48u /* 48 & 0xFF */)) {
-          set_has_itemmaxlvl();
+
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &itemmaxlvl_)));
@@ -325,45 +312,44 @@ void Goods::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  cached_has_bits = _has_bits_[0];
-  // optional int32 id = 1;
-  if (cached_has_bits & 0x00000002u) {
+  // int32 id = 1;
+  if (this->id() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->id(), output);
   }
 
-  // optional string itemName = 2;
-  if (cached_has_bits & 0x00000001u) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+  // string itemName = 2;
+  if (this->itemname().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->itemname().data(), static_cast<int>(this->itemname().length()),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
       "MyGame.Goods.itemName");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       2, this->itemname(), output);
   }
 
-  // optional int32 itemLV = 3;
-  if (cached_has_bits & 0x00000004u) {
+  // int32 itemLV = 3;
+  if (this->itemlv() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->itemlv(), output);
   }
 
-  // optional int32 UseMinLV = 4;
-  if (cached_has_bits & 0x00000008u) {
+  // int32 UseMinLV = 4;
+  if (this->useminlv() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->useminlv(), output);
   }
 
-  // optional int32 itemMinLvl = 5;
-  if (cached_has_bits & 0x00000010u) {
+  // int32 itemMinLvl = 5;
+  if (this->itemminlvl() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->itemminlvl(), output);
   }
 
-  // optional int32 itemMaxLvl = 6;
-  if (cached_has_bits & 0x00000020u) {
+  // int32 itemMaxLvl = 6;
+  if (this->itemmaxlvl() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(6, this->itemmaxlvl(), output);
   }
 
-  if (_internal_metadata_.have_unknown_fields()) {
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        _internal_metadata_.unknown_fields(), output);
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
   }
   // @@protoc_insertion_point(serialize_end:MyGame.Goods)
 }
@@ -375,46 +361,45 @@ void Goods::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  cached_has_bits = _has_bits_[0];
-  // optional int32 id = 1;
-  if (cached_has_bits & 0x00000002u) {
+  // int32 id = 1;
+  if (this->id() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->id(), target);
   }
 
-  // optional string itemName = 2;
-  if (cached_has_bits & 0x00000001u) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+  // string itemName = 2;
+  if (this->itemname().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->itemname().data(), static_cast<int>(this->itemname().length()),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
       "MyGame.Goods.itemName");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         2, this->itemname(), target);
   }
 
-  // optional int32 itemLV = 3;
-  if (cached_has_bits & 0x00000004u) {
+  // int32 itemLV = 3;
+  if (this->itemlv() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->itemlv(), target);
   }
 
-  // optional int32 UseMinLV = 4;
-  if (cached_has_bits & 0x00000008u) {
+  // int32 UseMinLV = 4;
+  if (this->useminlv() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->useminlv(), target);
   }
 
-  // optional int32 itemMinLvl = 5;
-  if (cached_has_bits & 0x00000010u) {
+  // int32 itemMinLvl = 5;
+  if (this->itemminlvl() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->itemminlvl(), target);
   }
 
-  // optional int32 itemMaxLvl = 6;
-  if (cached_has_bits & 0x00000020u) {
+  // int32 itemMaxLvl = 6;
+  if (this->itemmaxlvl() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(6, this->itemmaxlvl(), target);
   }
 
-  if (_internal_metadata_.have_unknown_fields()) {
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields(), target);
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
   }
   // @@protoc_insertion_point(serialize_to_array_end:MyGame.Goods)
   return target;
@@ -424,55 +409,53 @@ size_t Goods::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:MyGame.Goods)
   size_t total_size = 0;
 
-  if (_internal_metadata_.have_unknown_fields()) {
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        _internal_metadata_.unknown_fields());
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
   }
-  if (_has_bits_[0 / 32] & 63u) {
-    // optional string itemName = 2;
-    if (has_itemname()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->itemname());
-    }
-
-    // optional int32 id = 1;
-    if (has_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->id());
-    }
-
-    // optional int32 itemLV = 3;
-    if (has_itemlv()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->itemlv());
-    }
-
-    // optional int32 UseMinLV = 4;
-    if (has_useminlv()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->useminlv());
-    }
-
-    // optional int32 itemMinLvl = 5;
-    if (has_itemminlvl()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->itemminlvl());
-    }
-
-    // optional int32 itemMaxLvl = 6;
-    if (has_itemmaxlvl()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->itemmaxlvl());
-    }
-
+  // string itemName = 2;
+  if (this->itemname().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->itemname());
   }
+
+  // int32 id = 1;
+  if (this->id() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->id());
+  }
+
+  // int32 itemLV = 3;
+  if (this->itemlv() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->itemlv());
+  }
+
+  // int32 UseMinLV = 4;
+  if (this->useminlv() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->useminlv());
+  }
+
+  // int32 itemMinLvl = 5;
+  if (this->itemminlvl() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->itemminlvl());
+  }
+
+  // int32 itemMaxLvl = 6;
+  if (this->itemmaxlvl() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->itemmaxlvl());
+  }
+
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   SetCachedSize(cached_size);
   return total_size;
@@ -500,28 +483,24 @@ void Goods::MergeFrom(const Goods& from) {
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 63u) {
-    if (cached_has_bits & 0x00000001u) {
-      set_has_itemname();
-      itemname_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.itemname_);
-    }
-    if (cached_has_bits & 0x00000002u) {
-      id_ = from.id_;
-    }
-    if (cached_has_bits & 0x00000004u) {
-      itemlv_ = from.itemlv_;
-    }
-    if (cached_has_bits & 0x00000008u) {
-      useminlv_ = from.useminlv_;
-    }
-    if (cached_has_bits & 0x00000010u) {
-      itemminlvl_ = from.itemminlvl_;
-    }
-    if (cached_has_bits & 0x00000020u) {
-      itemmaxlvl_ = from.itemmaxlvl_;
-    }
-    _has_bits_[0] |= cached_has_bits;
+  if (from.itemname().size() > 0) {
+
+    itemname_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.itemname_);
+  }
+  if (from.id() != 0) {
+    set_id(from.id());
+  }
+  if (from.itemlv() != 0) {
+    set_itemlv(from.itemlv());
+  }
+  if (from.useminlv() != 0) {
+    set_useminlv(from.useminlv());
+  }
+  if (from.itemminlvl() != 0) {
+    set_itemminlvl(from.itemminlvl());
+  }
+  if (from.itemmaxlvl() != 0) {
+    set_itemmaxlvl(from.itemmaxlvl());
   }
 }
 
@@ -556,7 +535,6 @@ void Goods::InternalSwap(Goods* other) {
   swap(useminlv_, other->useminlv_);
   swap(itemminlvl_, other->itemminlvl_);
   swap(itemmaxlvl_, other->itemmaxlvl_);
-  swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 

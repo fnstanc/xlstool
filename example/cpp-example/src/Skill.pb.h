@@ -85,13 +85,6 @@ class Skill : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
     return *this;
   }
   #endif
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _internal_metadata_.unknown_fields();
-  }
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return _internal_metadata_.mutable_unknown_fields();
-  }
-
   static const ::google::protobuf::Descriptor* descriptor();
   static const Skill& default_instance();
 
@@ -153,8 +146,7 @@ class Skill : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
 
   // accessors -------------------------------------------------------
 
-  // optional string skillName = 4;
-  bool has_skillname() const;
+  // string skillName = 4;
   void clear_skillname();
   static const int kSkillNameFieldNumber = 4;
   const ::std::string& skillname() const;
@@ -168,36 +160,31 @@ class Skill : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
   ::std::string* release_skillname();
   void set_allocated_skillname(::std::string* skillname);
 
-  // optional int32 id = 1;
-  bool has_id() const;
+  // int32 id = 1;
   void clear_id();
   static const int kIdFieldNumber = 1;
   ::google::protobuf::int32 id() const;
   void set_id(::google::protobuf::int32 value);
 
-  // optional int32 skillID = 2;
-  bool has_skillid() const;
+  // int32 skillID = 2;
   void clear_skillid();
   static const int kSkillIDFieldNumber = 2;
   ::google::protobuf::int32 skillid() const;
   void set_skillid(::google::protobuf::int32 value);
 
-  // optional int32 skillIcon = 3;
-  bool has_skillicon() const;
+  // int32 skillIcon = 3;
   void clear_skillicon();
   static const int kSkillIconFieldNumber = 3;
   ::google::protobuf::int32 skillicon() const;
   void set_skillicon(::google::protobuf::int32 value);
 
-  // optional int32 skillLevel = 5;
-  bool has_skilllevel() const;
+  // int32 skillLevel = 5;
   void clear_skilllevel();
   static const int kSkillLevelFieldNumber = 5;
   ::google::protobuf::int32 skilllevel() const;
   void set_skilllevel(::google::protobuf::int32 value);
 
-  // optional int32 skillType = 6;
-  bool has_skilltype() const;
+  // int32 skillType = 6;
   void clear_skilltype();
   static const int kSkillTypeFieldNumber = 6;
   ::google::protobuf::int32 skilltype() const;
@@ -205,28 +192,15 @@ class Skill : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
 
   // @@protoc_insertion_point(class_scope:MyGame.Skill)
  private:
-  void set_has_id();
-  void clear_has_id();
-  void set_has_skillid();
-  void clear_has_skillid();
-  void set_has_skillicon();
-  void clear_has_skillicon();
-  void set_has_skillname();
-  void clear_has_skillname();
-  void set_has_skilllevel();
-  void clear_has_skilllevel();
-  void set_has_skilltype();
-  void clear_has_skilltype();
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::google::protobuf::internal::HasBits<1> _has_bits_;
-  mutable ::google::protobuf::internal::CachedSize _cached_size_;
   ::google::protobuf::internal::ArenaStringPtr skillname_;
   ::google::protobuf::int32 id_;
   ::google::protobuf::int32 skillid_;
   ::google::protobuf::int32 skillicon_;
   ::google::protobuf::int32 skilllevel_;
   ::google::protobuf::int32 skilltype_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
   friend struct ::protobuf_Skill_2eproto::TableStruct;
 };
 // ===================================================================
@@ -240,104 +214,64 @@ class Skill : public ::google::protobuf::Message /* @@protoc_insertion_point(cla
 #endif  // __GNUC__
 // Skill
 
-// optional int32 id = 1;
-inline bool Skill::has_id() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void Skill::set_has_id() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void Skill::clear_has_id() {
-  _has_bits_[0] &= ~0x00000002u;
-}
+// int32 id = 1;
 inline void Skill::clear_id() {
   id_ = 0;
-  clear_has_id();
 }
 inline ::google::protobuf::int32 Skill::id() const {
   // @@protoc_insertion_point(field_get:MyGame.Skill.id)
   return id_;
 }
 inline void Skill::set_id(::google::protobuf::int32 value) {
-  set_has_id();
+  
   id_ = value;
   // @@protoc_insertion_point(field_set:MyGame.Skill.id)
 }
 
-// optional int32 skillID = 2;
-inline bool Skill::has_skillid() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void Skill::set_has_skillid() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void Skill::clear_has_skillid() {
-  _has_bits_[0] &= ~0x00000004u;
-}
+// int32 skillID = 2;
 inline void Skill::clear_skillid() {
   skillid_ = 0;
-  clear_has_skillid();
 }
 inline ::google::protobuf::int32 Skill::skillid() const {
   // @@protoc_insertion_point(field_get:MyGame.Skill.skillID)
   return skillid_;
 }
 inline void Skill::set_skillid(::google::protobuf::int32 value) {
-  set_has_skillid();
+  
   skillid_ = value;
   // @@protoc_insertion_point(field_set:MyGame.Skill.skillID)
 }
 
-// optional int32 skillIcon = 3;
-inline bool Skill::has_skillicon() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
-}
-inline void Skill::set_has_skillicon() {
-  _has_bits_[0] |= 0x00000008u;
-}
-inline void Skill::clear_has_skillicon() {
-  _has_bits_[0] &= ~0x00000008u;
-}
+// int32 skillIcon = 3;
 inline void Skill::clear_skillicon() {
   skillicon_ = 0;
-  clear_has_skillicon();
 }
 inline ::google::protobuf::int32 Skill::skillicon() const {
   // @@protoc_insertion_point(field_get:MyGame.Skill.skillIcon)
   return skillicon_;
 }
 inline void Skill::set_skillicon(::google::protobuf::int32 value) {
-  set_has_skillicon();
+  
   skillicon_ = value;
   // @@protoc_insertion_point(field_set:MyGame.Skill.skillIcon)
 }
 
-// optional string skillName = 4;
-inline bool Skill::has_skillname() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void Skill::set_has_skillname() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void Skill::clear_has_skillname() {
-  _has_bits_[0] &= ~0x00000001u;
-}
+// string skillName = 4;
 inline void Skill::clear_skillname() {
   skillname_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  clear_has_skillname();
 }
 inline const ::std::string& Skill::skillname() const {
   // @@protoc_insertion_point(field_get:MyGame.Skill.skillName)
   return skillname_.GetNoArena();
 }
 inline void Skill::set_skillname(const ::std::string& value) {
-  set_has_skillname();
+  
   skillname_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
   // @@protoc_insertion_point(field_set:MyGame.Skill.skillName)
 }
 #if LANG_CXX11
 inline void Skill::set_skillname(::std::string&& value) {
-  set_has_skillname();
+  
   skillname_.SetNoArena(
     &::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::move(value));
   // @@protoc_insertion_point(field_set_rvalue:MyGame.Skill.skillName)
@@ -345,83 +279,60 @@ inline void Skill::set_skillname(::std::string&& value) {
 #endif
 inline void Skill::set_skillname(const char* value) {
   GOOGLE_DCHECK(value != NULL);
-  set_has_skillname();
+  
   skillname_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
   // @@protoc_insertion_point(field_set_char:MyGame.Skill.skillName)
 }
 inline void Skill::set_skillname(const char* value, size_t size) {
-  set_has_skillname();
+  
   skillname_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
       ::std::string(reinterpret_cast<const char*>(value), size));
   // @@protoc_insertion_point(field_set_pointer:MyGame.Skill.skillName)
 }
 inline ::std::string* Skill::mutable_skillname() {
-  set_has_skillname();
+  
   // @@protoc_insertion_point(field_mutable:MyGame.Skill.skillName)
   return skillname_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Skill::release_skillname() {
   // @@protoc_insertion_point(field_release:MyGame.Skill.skillName)
-  if (!has_skillname()) {
-    return NULL;
-  }
-  clear_has_skillname();
-  return skillname_.ReleaseNonDefaultNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  
+  return skillname_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline void Skill::set_allocated_skillname(::std::string* skillname) {
   if (skillname != NULL) {
-    set_has_skillname();
+    
   } else {
-    clear_has_skillname();
+    
   }
   skillname_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), skillname);
   // @@protoc_insertion_point(field_set_allocated:MyGame.Skill.skillName)
 }
 
-// optional int32 skillLevel = 5;
-inline bool Skill::has_skilllevel() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
-}
-inline void Skill::set_has_skilllevel() {
-  _has_bits_[0] |= 0x00000010u;
-}
-inline void Skill::clear_has_skilllevel() {
-  _has_bits_[0] &= ~0x00000010u;
-}
+// int32 skillLevel = 5;
 inline void Skill::clear_skilllevel() {
   skilllevel_ = 0;
-  clear_has_skilllevel();
 }
 inline ::google::protobuf::int32 Skill::skilllevel() const {
   // @@protoc_insertion_point(field_get:MyGame.Skill.skillLevel)
   return skilllevel_;
 }
 inline void Skill::set_skilllevel(::google::protobuf::int32 value) {
-  set_has_skilllevel();
+  
   skilllevel_ = value;
   // @@protoc_insertion_point(field_set:MyGame.Skill.skillLevel)
 }
 
-// optional int32 skillType = 6;
-inline bool Skill::has_skilltype() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
-}
-inline void Skill::set_has_skilltype() {
-  _has_bits_[0] |= 0x00000020u;
-}
-inline void Skill::clear_has_skilltype() {
-  _has_bits_[0] &= ~0x00000020u;
-}
+// int32 skillType = 6;
 inline void Skill::clear_skilltype() {
   skilltype_ = 0;
-  clear_has_skilltype();
 }
 inline ::google::protobuf::int32 Skill::skilltype() const {
   // @@protoc_insertion_point(field_get:MyGame.Skill.skillType)
   return skilltype_;
 }
 inline void Skill::set_skilltype(::google::protobuf::int32 value) {
-  set_has_skilltype();
+  
   skilltype_ = value;
   // @@protoc_insertion_point(field_set:MyGame.Skill.skillType)
 }

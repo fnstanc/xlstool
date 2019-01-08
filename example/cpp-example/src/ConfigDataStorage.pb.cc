@@ -56,18 +56,16 @@ void InitDefaults() {
 ::google::protobuf::Metadata file_level_metadata[1];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::MyGame::ConfigDataStorage, _has_bits_),
+  ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::MyGame::ConfigDataStorage, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::MyGame::ConfigDataStorage, goods_items_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::MyGame::ConfigDataStorage, skill_items_),
-  ~0u,
-  ~0u,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, 7, sizeof(::MyGame::ConfigDataStorage)},
+  { 0, -1, sizeof(::MyGame::ConfigDataStorage)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -98,10 +96,10 @@ void AddDescriptorsImpl() {
       "\n\027ConfigDataStorage.proto\022\006MyGame\032\013Goods"
       ".proto\032\013Skill.proto\"[\n\021ConfigDataStorage"
       "\022\"\n\013Goods_items\030\001 \003(\0132\r.MyGame.Goods\022\"\n\013"
-      "Skill_items\030\002 \003(\0132\r.MyGame.Skill"
+      "Skill_items\030\002 \003(\0132\r.MyGame.Skillb\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 152);
+      descriptor, 160);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "ConfigDataStorage.proto", &protobuf_RegisterTypes);
   ::protobuf_Goods_2eproto::AddDescriptors();
@@ -146,7 +144,6 @@ ConfigDataStorage::ConfigDataStorage()
 ConfigDataStorage::ConfigDataStorage(const ConfigDataStorage& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(NULL),
-      _has_bits_(from._has_bits_),
       goods_items_(from.goods_items_),
       skill_items_(from.skill_items_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
@@ -186,7 +183,6 @@ void ConfigDataStorage::Clear() {
 
   goods_items_.Clear();
   skill_items_.Clear();
-  _has_bits_.Clear();
   _internal_metadata_.Clear();
 }
 
@@ -268,9 +264,9 @@ void ConfigDataStorage::SerializeWithCachedSizes(
       output);
   }
 
-  if (_internal_metadata_.have_unknown_fields()) {
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        _internal_metadata_.unknown_fields(), output);
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
   }
   // @@protoc_insertion_point(serialize_end:MyGame.ConfigDataStorage)
 }
@@ -298,9 +294,9 @@ void ConfigDataStorage::SerializeWithCachedSizes(
         2, this->skill_items(static_cast<int>(i)), deterministic, target);
   }
 
-  if (_internal_metadata_.have_unknown_fields()) {
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields(), target);
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
   }
   // @@protoc_insertion_point(serialize_to_array_end:MyGame.ConfigDataStorage)
   return target;
@@ -310,10 +306,10 @@ size_t ConfigDataStorage::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:MyGame.ConfigDataStorage)
   size_t total_size = 0;
 
-  if (_internal_metadata_.have_unknown_fields()) {
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        _internal_metadata_.unknown_fields());
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
   }
   // repeated .MyGame.Goods Goods_items = 1;
   {
@@ -394,7 +390,6 @@ void ConfigDataStorage::InternalSwap(ConfigDataStorage* other) {
   using std::swap;
   CastToBase(&goods_items_)->InternalSwap(CastToBase(&other->goods_items_));
   CastToBase(&skill_items_)->InternalSwap(CastToBase(&other->skill_items_));
-  swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 

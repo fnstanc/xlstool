@@ -87,13 +87,6 @@ class ConfigDataStorage : public ::google::protobuf::Message /* @@protoc_inserti
     return *this;
   }
   #endif
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _internal_metadata_.unknown_fields();
-  }
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return _internal_metadata_.mutable_unknown_fields();
-  }
-
   static const ::google::protobuf::Descriptor* descriptor();
   static const ConfigDataStorage& default_instance();
 
@@ -183,10 +176,9 @@ class ConfigDataStorage : public ::google::protobuf::Message /* @@protoc_inserti
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::google::protobuf::internal::HasBits<1> _has_bits_;
-  mutable ::google::protobuf::internal::CachedSize _cached_size_;
   ::google::protobuf::RepeatedPtrField< ::MyGame::Goods > goods_items_;
   ::google::protobuf::RepeatedPtrField< ::MyGame::Skill > skill_items_;
+  mutable ::google::protobuf::internal::CachedSize _cached_size_;
   friend struct ::protobuf_ConfigDataStorage_2eproto::TableStruct;
 };
 // ===================================================================

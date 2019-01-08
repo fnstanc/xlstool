@@ -16,14 +16,13 @@ int main(int argc, char *argv[])
     std::string bytes((std::istreambuf_iterator<char>(in)),
                      std::istreambuf_iterator<char>());
     ConfigData config_data;
-    if (!config_data.Init(bytes)) {
+    if (!config_data.init(bytes)) {
         std::cerr << "ConfigData::Init error." << std::endl;
         return 0;
     }
 
-    auto goods = config_data.GetGoods(3403);
+    auto goods = config_data.getGoods(3403);
     if (goods) {
-        std::cout << goods->itemname() << std::endl; 
         std::cout << goods->DebugString() << std::endl;
     }
 

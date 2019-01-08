@@ -48,7 +48,7 @@ void InitDefaults() {
 ::google::protobuf::Metadata file_level_metadata[1];
 
 const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::MyGame::Skill, _has_bits_),
+  ~0u,  // no _has_bits_
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::MyGame::Skill, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
@@ -59,15 +59,9 @@ const ::google::protobuf::uint32 TableStruct::offsets[] GOOGLE_PROTOBUF_ATTRIBUT
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::MyGame::Skill, skillname_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::MyGame::Skill, skilllevel_),
   GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(::MyGame::Skill, skilltype_),
-  1,
-  2,
-  3,
-  0,
-  4,
-  5,
 };
 static const ::google::protobuf::internal::MigrationSchema schemas[] GOOGLE_PROTOBUF_ATTRIBUTE_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, 11, sizeof(::MyGame::Skill)},
+  { 0, -1, sizeof(::MyGame::Skill)},
 };
 
 static ::google::protobuf::Message const * const file_default_instances[] = {
@@ -98,10 +92,10 @@ void AddDescriptorsImpl() {
       "\n\013Skill.proto\022\006MyGame\"q\n\005Skill\022\n\n\002id\030\001 \001"
       "(\005\022\017\n\007skillID\030\002 \001(\005\022\021\n\tskillIcon\030\003 \001(\005\022\021"
       "\n\tskillName\030\004 \001(\t\022\022\n\nskillLevel\030\005 \001(\005\022\021\n"
-      "\tskillType\030\006 \001(\005"
+      "\tskillType\030\006 \001(\005b\006proto3"
   };
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-      descriptor, 136);
+      descriptor, 144);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "Skill.proto", &protobuf_RegisterTypes);
 }
@@ -141,11 +135,10 @@ Skill::Skill()
 }
 Skill::Skill(const Skill& from)
   : ::google::protobuf::Message(),
-      _internal_metadata_(NULL),
-      _has_bits_(from._has_bits_) {
+      _internal_metadata_(NULL) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   skillname_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-  if (from.has_skillname()) {
+  if (from.skillname().size() > 0) {
     skillname_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.skillname_);
   }
   ::memcpy(&id_, &from.id_,
@@ -190,16 +183,10 @@ void Skill::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  cached_has_bits = _has_bits_[0];
-  if (cached_has_bits & 0x00000001u) {
-    skillname_.ClearNonDefaultToEmptyNoArena();
-  }
-  if (cached_has_bits & 62u) {
-    ::memset(&id_, 0, static_cast<size_t>(
-        reinterpret_cast<char*>(&skilltype_) -
-        reinterpret_cast<char*>(&id_)) + sizeof(skilltype_));
-  }
-  _has_bits_.Clear();
+  skillname_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  ::memset(&id_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&skilltype_) -
+      reinterpret_cast<char*>(&id_)) + sizeof(skilltype_));
   _internal_metadata_.Clear();
 }
 
@@ -213,11 +200,11 @@ bool Skill::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional int32 id = 1;
+      // int32 id = 1;
       case 1: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(8u /* 8 & 0xFF */)) {
-          set_has_id();
+
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &id_)));
@@ -227,11 +214,11 @@ bool Skill::MergePartialFromCodedStream(
         break;
       }
 
-      // optional int32 skillID = 2;
+      // int32 skillID = 2;
       case 2: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(16u /* 16 & 0xFF */)) {
-          set_has_skillid();
+
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &skillid_)));
@@ -241,11 +228,11 @@ bool Skill::MergePartialFromCodedStream(
         break;
       }
 
-      // optional int32 skillIcon = 3;
+      // int32 skillIcon = 3;
       case 3: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(24u /* 24 & 0xFF */)) {
-          set_has_skillicon();
+
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &skillicon_)));
@@ -255,27 +242,27 @@ bool Skill::MergePartialFromCodedStream(
         break;
       }
 
-      // optional string skillName = 4;
+      // string skillName = 4;
       case 4: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(34u /* 34 & 0xFF */)) {
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_skillname()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
             this->skillname().data(), static_cast<int>(this->skillname().length()),
-            ::google::protobuf::internal::WireFormat::PARSE,
-            "MyGame.Skill.skillName");
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "MyGame.Skill.skillName"));
         } else {
           goto handle_unusual;
         }
         break;
       }
 
-      // optional int32 skillLevel = 5;
+      // int32 skillLevel = 5;
       case 5: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(40u /* 40 & 0xFF */)) {
-          set_has_skilllevel();
+
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &skilllevel_)));
@@ -285,11 +272,11 @@ bool Skill::MergePartialFromCodedStream(
         break;
       }
 
-      // optional int32 skillType = 6;
+      // int32 skillType = 6;
       case 6: {
         if (static_cast< ::google::protobuf::uint8>(tag) ==
             static_cast< ::google::protobuf::uint8>(48u /* 48 & 0xFF */)) {
-          set_has_skilltype();
+
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, &skilltype_)));
@@ -325,45 +312,44 @@ void Skill::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  cached_has_bits = _has_bits_[0];
-  // optional int32 id = 1;
-  if (cached_has_bits & 0x00000002u) {
+  // int32 id = 1;
+  if (this->id() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->id(), output);
   }
 
-  // optional int32 skillID = 2;
-  if (cached_has_bits & 0x00000004u) {
+  // int32 skillID = 2;
+  if (this->skillid() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->skillid(), output);
   }
 
-  // optional int32 skillIcon = 3;
-  if (cached_has_bits & 0x00000008u) {
+  // int32 skillIcon = 3;
+  if (this->skillicon() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->skillicon(), output);
   }
 
-  // optional string skillName = 4;
-  if (cached_has_bits & 0x00000001u) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+  // string skillName = 4;
+  if (this->skillname().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->skillname().data(), static_cast<int>(this->skillname().length()),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
       "MyGame.Skill.skillName");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
       4, this->skillname(), output);
   }
 
-  // optional int32 skillLevel = 5;
-  if (cached_has_bits & 0x00000010u) {
+  // int32 skillLevel = 5;
+  if (this->skilllevel() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->skilllevel(), output);
   }
 
-  // optional int32 skillType = 6;
-  if (cached_has_bits & 0x00000020u) {
+  // int32 skillType = 6;
+  if (this->skilltype() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(6, this->skilltype(), output);
   }
 
-  if (_internal_metadata_.have_unknown_fields()) {
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
-        _internal_metadata_.unknown_fields(), output);
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), output);
   }
   // @@protoc_insertion_point(serialize_end:MyGame.Skill)
 }
@@ -375,46 +361,45 @@ void Skill::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  cached_has_bits = _has_bits_[0];
-  // optional int32 id = 1;
-  if (cached_has_bits & 0x00000002u) {
+  // int32 id = 1;
+  if (this->id() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->id(), target);
   }
 
-  // optional int32 skillID = 2;
-  if (cached_has_bits & 0x00000004u) {
+  // int32 skillID = 2;
+  if (this->skillid() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->skillid(), target);
   }
 
-  // optional int32 skillIcon = 3;
-  if (cached_has_bits & 0x00000008u) {
+  // int32 skillIcon = 3;
+  if (this->skillicon() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->skillicon(), target);
   }
 
-  // optional string skillName = 4;
-  if (cached_has_bits & 0x00000001u) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8StringNamedField(
+  // string skillName = 4;
+  if (this->skillname().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->skillname().data(), static_cast<int>(this->skillname().length()),
-      ::google::protobuf::internal::WireFormat::SERIALIZE,
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
       "MyGame.Skill.skillName");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         4, this->skillname(), target);
   }
 
-  // optional int32 skillLevel = 5;
-  if (cached_has_bits & 0x00000010u) {
+  // int32 skillLevel = 5;
+  if (this->skilllevel() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->skilllevel(), target);
   }
 
-  // optional int32 skillType = 6;
-  if (cached_has_bits & 0x00000020u) {
+  // int32 skillType = 6;
+  if (this->skilltype() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(6, this->skilltype(), target);
   }
 
-  if (_internal_metadata_.have_unknown_fields()) {
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields(), target);
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()), target);
   }
   // @@protoc_insertion_point(serialize_to_array_end:MyGame.Skill)
   return target;
@@ -424,55 +409,53 @@ size_t Skill::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:MyGame.Skill)
   size_t total_size = 0;
 
-  if (_internal_metadata_.have_unknown_fields()) {
+  if ((_internal_metadata_.have_unknown_fields() &&  ::google::protobuf::internal::GetProto3PreserveUnknownsDefault())) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
-        _internal_metadata_.unknown_fields());
+        (::google::protobuf::internal::GetProto3PreserveUnknownsDefault()   ? _internal_metadata_.unknown_fields()   : _internal_metadata_.default_instance()));
   }
-  if (_has_bits_[0 / 32] & 63u) {
-    // optional string skillName = 4;
-    if (has_skillname()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->skillname());
-    }
-
-    // optional int32 id = 1;
-    if (has_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->id());
-    }
-
-    // optional int32 skillID = 2;
-    if (has_skillid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->skillid());
-    }
-
-    // optional int32 skillIcon = 3;
-    if (has_skillicon()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->skillicon());
-    }
-
-    // optional int32 skillLevel = 5;
-    if (has_skilllevel()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->skilllevel());
-    }
-
-    // optional int32 skillType = 6;
-    if (has_skilltype()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->skilltype());
-    }
-
+  // string skillName = 4;
+  if (this->skillname().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->skillname());
   }
+
+  // int32 id = 1;
+  if (this->id() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->id());
+  }
+
+  // int32 skillID = 2;
+  if (this->skillid() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->skillid());
+  }
+
+  // int32 skillIcon = 3;
+  if (this->skillicon() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->skillicon());
+  }
+
+  // int32 skillLevel = 5;
+  if (this->skilllevel() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->skilllevel());
+  }
+
+  // int32 skillType = 6;
+  if (this->skilltype() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->skilltype());
+  }
+
   int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   SetCachedSize(cached_size);
   return total_size;
@@ -500,28 +483,24 @@ void Skill::MergeFrom(const Skill& from) {
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  cached_has_bits = from._has_bits_[0];
-  if (cached_has_bits & 63u) {
-    if (cached_has_bits & 0x00000001u) {
-      set_has_skillname();
-      skillname_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.skillname_);
-    }
-    if (cached_has_bits & 0x00000002u) {
-      id_ = from.id_;
-    }
-    if (cached_has_bits & 0x00000004u) {
-      skillid_ = from.skillid_;
-    }
-    if (cached_has_bits & 0x00000008u) {
-      skillicon_ = from.skillicon_;
-    }
-    if (cached_has_bits & 0x00000010u) {
-      skilllevel_ = from.skilllevel_;
-    }
-    if (cached_has_bits & 0x00000020u) {
-      skilltype_ = from.skilltype_;
-    }
-    _has_bits_[0] |= cached_has_bits;
+  if (from.skillname().size() > 0) {
+
+    skillname_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.skillname_);
+  }
+  if (from.id() != 0) {
+    set_id(from.id());
+  }
+  if (from.skillid() != 0) {
+    set_skillid(from.skillid());
+  }
+  if (from.skillicon() != 0) {
+    set_skillicon(from.skillicon());
+  }
+  if (from.skilllevel() != 0) {
+    set_skilllevel(from.skilllevel());
+  }
+  if (from.skilltype() != 0) {
+    set_skilltype(from.skilltype());
   }
 }
 
@@ -556,7 +535,6 @@ void Skill::InternalSwap(Skill* other) {
   swap(skillicon_, other->skillicon_);
   swap(skilllevel_, other->skilllevel_);
   swap(skilltype_, other->skilltype_);
-  swap(_has_bits_[0], other->_has_bits_[0]);
   _internal_metadata_.Swap(&other->_internal_metadata_);
 }
 
