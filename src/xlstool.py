@@ -264,10 +264,14 @@ def get_field_value(cell, field_type):
     if cell.ctype == 0:
         return 0
     elif cell.ctype == 1 or cell.ctype == 2:
-        if field_type in INTEGER_TYPES:
-            return int(cell.value)
-        elif field_type in FRACTION_TYPES:
-            return float(cell.value)
+        try:
+            if field_type in INTEGER_TYPES:
+                return int(cell.value)
+            elif field_type in FRACTION_TYPES:
+                return float(cell.value)
+        except Exception as e:
+            LOG_WARN("*** failed to parse field, type {}, value {} ***\n{}".format(type(cell.value), cell.value, e))
+            return 0
 
     print(cell.value)
     print(cell.ctype)
