@@ -38,7 +38,6 @@ Excel配置读取工具
 ### 依赖
 * python
 * protoc
-* protobuf-net (用于生成unity cs文件)
 * xlrd
 
  ``pip install xlrd``
@@ -70,6 +69,8 @@ option:
 
 ### 在程序中读取数据
 
+unity2017开启net45, 使用官方protobuf。
+
 ```cs
 using UnityEngine;
 using MyGame;
@@ -83,11 +84,11 @@ public class ProtoDemo : MonoBehaviour {
         // 初始化数据中心
         ConfigData.Init(ta.bytes);
 
-        var goods = ConfigData.Goods(3400);
-        Debug.LogFormat("goods: name {0}, id {1}", goods.itemName, goods.id);
+        var goods = ConfigData.GetGoods(3400);
+        Debug.LogFormat("goods: name {0}, id {1}", goods.ItemName, goods.Id);
 
-        var skill = ConfigData.Skill(12020);
-        Debug.LogFormat("skill: name {0}, level {1}", skill.skillName, skill.skillLevel);
+        var skill = ConfigData.GetSkill(12020);
+        Debug.LogFormat("skill: name {0}, level {1}", skill.SkillName, skill.SkillLevel);
 	}
 
 }

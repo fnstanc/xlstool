@@ -10,21 +10,21 @@ namespace MyGame {
 public static class ConfigData {
 
 #region DataBlocks
-    private static readonly Dictionary<int, Goods> Goods_items_ = new Dictionary<int, Goods>();
-    private static readonly Dictionary<int, Skill> Skill_items_ = new Dictionary<int, Skill>();
+    private static readonly Dictionary<int, Goods> _GoodsItems = new Dictionary<int, Goods>();
+    private static readonly Dictionary<int, Skill> _SkillItems = new Dictionary<int, Skill>();
 #endregion
 
     public static bool Init(byte[] bytes) {
 #region Init
-        var dataBlocks = ProtoBuf.Serializer.Deserialize<MyGame.ConfigDataStorage>(new System.IO.MemoryStream(bytes));
+        var dataBlocks = ConfigDataStorage.Parser.ParseFrom(bytes);
         if (dataBlocks == null) return false;
-        for (int i = 0; i < dataBlocks.Goods_items.Count; ++i) {
-            var item = dataBlocks.Goods_items[i];
-            Goods_items_[item.id] = item;
+        for (int i = 0; i < dataBlocks.GoodsItems.Count; ++i) {
+            var item = dataBlocks.GoodsItems[i];
+            _GoodsItems[item.Id] = item;
         }
-        for (int i = 0; i < dataBlocks.Skill_items.Count; ++i) {
-            var item = dataBlocks.Skill_items[i];
-            Skill_items_[item.id] = item;
+        for (int i = 0; i < dataBlocks.SkillItems.Count; ++i) {
+            var item = dataBlocks.SkillItems[i];
+            _SkillItems[item.Id] = item;
         }
         return true;
 #endregion
@@ -32,13 +32,13 @@ public static class ConfigData {
 
     public static Goods GetGoods(int id) {
         Goods item;
-        Goods_items_.TryGetValue(id, out item);
+        _GoodsItems.TryGetValue(id, out item);
         return item;
     }
 
     public static Skill GetSkill(int id) {
         Skill item;
-        Skill_items_.TryGetValue(id, out item);
+        _SkillItems.TryGetValue(id, out item);
         return item;
     }
 

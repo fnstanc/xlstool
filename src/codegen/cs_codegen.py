@@ -30,7 +30,7 @@ def output_cs_file_tail():
 
 def output_loader_class_member(type_name, indent, output):
     member = ' ' * indent + \
-        "private static readonly Dictionary<int, {}> {}_items_ = new Dictionary<int, {}>();\n"
+        "private static readonly Dictionary<int, {}> _{}Items = new Dictionary<int, {}>();\n"
     output.append(member.format(type_name, type_name, type_name))
 
 
@@ -38,25 +38,25 @@ def output_member_init_code_snippet(type_name, indent, output):
     space = ' ' * indent
     body_space = ' ' * (indent + TAB_WIDTH)
     output.append(
-        "{}for (int i = 0; i < dataBlocks.{}_items.Count; ++i) {{\n".format(space, type_name))
-    output.append("{}var item = dataBlocks.{}_items[i];\n".format(
+        "{}for (int i = 0; i < dataBlocks.{}Items.Count; ++i) {{\n".format(space, type_name))
+    output.append("{}var item = dataBlocks.{}Items[i];\n".format(
         body_space, type_name))
-    output.append("{}{}_items_[item.id] = item;\n".format(
+    output.append("{}_{}Items[item.Id] = item;\n".format(
         body_space, type_name))
     output.append(space + "}\n")
 
 
-def begin_init_function(package_name, datablocks_name, indent):
+def begin_init_function(datablocks_name, indent):
     space = ' ' * indent
     body_space = ' ' * (indent + TAB_WIDTH)
 
     content = space + "public static bool Init(byte[] bytes) {{\n"
     content += "#region Init\n"
     content += body_space + \
-        "var dataBlocks = ProtoBuf.Serializer.Deserialize<{}.{}>(new System.IO.MemoryStream(bytes));\n"
+        "var dataBlocks = {}.Parser.ParseFrom(bytes);\n"
     content += body_space + "if (dataBlocks == null) return false;\n"
 
-    return content.format(package_name, datablocks_name)
+    return content.format(datablocks_name)
 
 
 def end_init_fundtion(indent):
@@ -74,7 +74,7 @@ def output_item_getter_function(type_name, indent, output):
         ' ' * indent + "public static {} Get{}(int id) {{\n".format(type_name, type_name))
     output.append(body_space + "{} item;\n".format(type_name))
     output.append(
-        body_space + "{}_items_.TryGetValue(id, out item);\n".format(type_name))
+        body_space + "_{}Items.TryGetValue(id, out item);\n".format(type_name))
     output.append(body_space + "return item;\n".format(type_name))
     output.append(' ' * indent + "}\n\n")
 
@@ -108,7 +108,7 @@ def gen_code(package_name, loader_name, datablocks_name, all_sheet_metas, output
         f.write(output_cs_file_header(package_name, loader_name, file_name))
         f.writelines(member_lines)
 
-        f.write(begin_init_function(package_name, datablocks_name, 4))
+        f.write(begin_init_function(datablocks_name, 4))
         f.writelines(member_init_codes)
         f.write(end_init_fundtion(4))
 
