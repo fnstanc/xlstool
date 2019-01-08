@@ -270,7 +270,8 @@ def get_field_value(cell, field_type):
             elif field_type in FRACTION_TYPES:
                 return float(cell.value)
         except Exception as e:
-            LOG_WARN("*** failed to parse field, type {}, value {} ***\n{}".format(type(cell.value), cell.value, e))
+            LOG_WARN(
+                "*** failed to parse field, type {}, value {} ***\n{}".format(type(cell.value), cell.value, e))
             return 0
 
     print(cell.value)
@@ -384,7 +385,7 @@ def process_path(file_path, tag, output):
         from codegen import cs_codegen
         LOG_INFO("==> Generating csharp binding")
         cs_codegen.gen_code(PACKAGE_NAME, LOADER_CLASS_NAME,
-                                      DATA_BLOCKS_STRUCT_NAME, all_sheet_metas, CS_OUTPUT_PATH)
+                            DATA_BLOCKS_STRUCT_NAME, all_sheet_metas, CS_OUTPUT_PATH)
 
     if "cpp" in output:
         from codegen import cpp_codegen
