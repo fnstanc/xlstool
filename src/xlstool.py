@@ -264,13 +264,10 @@ def get_field_value(cell, field_type):
     if cell.ctype == 0:
         return 0
     elif cell.ctype == 1 or cell.ctype == 2:
-        try:
-            if field_type in INTEGER_TYPES:
-                return int(cell.value)
-            elif field_type in FRACTION_TYPES:
-                return float(cell.value)
-        finally:
-            return 0
+        if field_type in INTEGER_TYPES:
+            return int(cell.value)
+        elif field_type in FRACTION_TYPES:
+            return float(cell.value)
 
     print(cell.value)
     print(cell.ctype)

@@ -12,10 +12,10 @@ public class ProtoDemo : MonoBehaviour {
         ConfigData.Init(ta.bytes);
 
         var goods = ConfigData.GetGoods(3400);
-        Debug.LogFormat("goods: name {0}, id {1}", goods.ItemName, goods.Id);
+        Debug.LogFormat("goods 3400: {0}", goods.ToString());
 
         var skill = ConfigData.GetSkill(12020);
-        Debug.LogFormat("skill: name {0}, level {1}", skill.SkillName, skill.SkillLevel);
+        Debug.LogFormat("skill 12020 {0}", skill.ToString());
 	}
 
 }
