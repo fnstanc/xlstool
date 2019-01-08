@@ -12,7 +12,8 @@ python ./src/xlstool.py -t c -o cs,cpp --package_name=MyGame --loader_name=Confi
 
 for filename in ./output/proto/*.proto; do
     protoc -I ./output/proto --cpp_out=./output/cpp/ $filename
-    protogen -i:$filename -o:"./output/cs/$(basename $filename .proto).cs"
+    protoc -I ./output/proto --csharp_out=./output/cs/ $filename
+    # protogen -i:$filename -o:"./output/cs/$(basename $filename .proto).cs"
 done
 
 cp ./output/bytes/ConfigData.bytes ./example/unity-example/Assets/Resources
