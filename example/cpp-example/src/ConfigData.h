@@ -9,15 +9,17 @@
 
 #include <map>
 #include <string>
-#include "Goods.pb.h"
-#include "Skill.pb.h"
 #include "ConfigDataStorage.pb.h"
 
 namespace MyGame {
 class ConfigData {
 public:
     bool init(const std::string &bytes);
+    int Goods_items_size();
+    const Goods *Goods_items(int index);
     const Goods *getGoods(int id);
+    int Skill_items_size();
+    const Skill *Skill_items(int index);
     const Skill *getSkill(int id);
 
 private:

@@ -52,6 +52,7 @@ ${getter_functions}
 initialize_function_template = '''bool ${loader_name}::init(const std::string &bytes) {
     if (!data_root_.ParseFromString(bytes)) return false;
     ${initialize_blocks}
+    return true;
 }
 '''
 
@@ -66,14 +67,25 @@ def gen_initialize_block(sheet_name):
 
 
 def gen_getter_funcion(loader_name, sheet_name):
-    fmt = '''const {} *{}::get{}(int id) {{
-    auto iter = {}_items_.find(id);
-    if(iter != {}_items_.end()) return iter->second;
+    fmt = '''int ${loader_name}::${type}_items_size() {
+    return data_root_.${lower_type}_items_size();
+}
+
+const ${type} *${loader_name}::${type}_items(int index) {
+    auto &item = data_root_.${lower_type}_items(index);
+    return &item;
+}
+
+const ${type} *${loader_name}::get${type}(int id) {
+    auto iter = ${type}_items_.find(id);
+    if(iter != ${type}_items_.end()) return iter->second;
     return nullptr;
-}}
+}
 '''
-    return fmt.format(sheet_name, loader_name,
-                      sheet_name, sheet_name, sheet_name)
+    content = fmt.replace("${type}", sheet_name)
+    content = content.replace("${lower_type}", sheet_name.lower())
+    content = content.replace("${loader_name}", loader_name)
+    return content
 
 
 def gen_cpp_header_file(package_name, loader_name,
@@ -90,11 +102,20 @@ def gen_cpp_header_file(package_name, loader_name,
     for xls_file, sheet_metas in list(all_sheet_metas.items()):
         for sheet_meta in sheet_metas:
             sheet_name = sheet_meta.sheet_name
-            include_lines.append("#include \"{}.pb.h\"".format(sheet_name))
+            # include_lines.append("#include \"{}.pb.h\"".format(sheet_name))
             member_lines.append(
                 "std::map<int, const {} *> {}_items_;".format(sheet_name,
                                                               sheet_name)
             )
+
+            getter_lines.append(
+                "int {}_items_size();".format(sheet_name, sheet_name)
+            )
+
+            getter_lines.append(
+                "const {} *{}_items(int index);".format(sheet_name, sheet_name)
+            )
+
             getter_lines.append(
                 "const {} *get{}(int id);".format(sheet_name, sheet_name)
             )

@@ -9,3 +9,4 @@ example/unity-example/*.csproj
 example/unity-example/*.vs
 example/unity-example/obj
 example/cpp-example/build
+example/cpp-example/_build

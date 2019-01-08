@@ -16,12 +16,31 @@ bool ConfigData::init(const std::string &bytes) {
         const Skill &item = data_root_.skill_items(i);
         Skill_items_[item.id()] = &item;
     }
+    return true;
+}
+
+int ConfigData::Goods_items_size() {
+    return data_root_.goods_items_size();
+}
+
+const Goods *ConfigData::Goods_items(int index) {
+    auto &item = data_root_.goods_items(index);
+    return &item;
 }
 
 const Goods *ConfigData::getGoods(int id) {
     auto iter = Goods_items_.find(id);
     if(iter != Goods_items_.end()) return iter->second;
     return nullptr;
+}
+
+int ConfigData::Skill_items_size() {
+    return data_root_.skill_items_size();
+}
+
+const Skill *ConfigData::Skill_items(int index) {
+    auto &item = data_root_.skill_items(index);
+    return &item;
 }
 
 const Skill *ConfigData::getSkill(int id) {
