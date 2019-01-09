@@ -334,22 +334,10 @@ def gen_binary(all_sheet_metas):
         f.write(data)
 
 
-def files_within(file_path, pattern="*"):
-    import os
-    import fnmatch
-
-    if os.path.isfile(file_path):
-        yield file_path
-    else:
-        for dirpath, dirnames, filenames in os.walk(file_path):
-            for file_name in fnmatch.filter(filenames, pattern):
-                yield os.path.join(dirpath, file_name)
-
-
-def parse_xls_sheet_meta(file_path, tag):
+def parse_xls_sheet_meta(xls_files, tag):
     all_sheet_names = {}
     all_sheet_metas = {}
-    for xls_file_path in files_within(file_path, pattern="*.xls"):
+    for xls_file_path in xls_files:
         LOG_INFO("==> Parsing sheet meta for file: " + xls_file_path)
         workbook = xlrd.open_workbook(xls_file_path)
         sheet_names = workbook.sheet_names()
@@ -376,8 +364,8 @@ def parse_xls_sheet_meta(file_path, tag):
     return all_sheet_metas
 
 
-def process_path(file_path, tag, output):
-    all_sheet_metas = parse_xls_sheet_meta(file_path, tag)
+def process_xls_files(xls_files, tag, output):
+    all_sheet_metas = parse_xls_sheet_meta(xls_files, tag)
     gen_proto(all_sheet_metas)
     gen_binary(all_sheet_metas)
 
@@ -398,11 +386,13 @@ def process_path(file_path, tag, output):
 
 def usage():
     print('''
-Usage: %s [options] excel_file output_dir
+Usage: %s [options] output_dir
 option:
     -h, --help
     -t, --tag=              Only export fields which has the tag
     -o, --output=cs,cpp     Generate cs,cpp bindings
+    -f, --file_list         Deal with xls files list in the file list
+    -p, --xls_path          Deal with xls files under the path
         --loader_name=      Config loader class name
         --package_name=     Proto package name
 ''' % (sys.argv[0]))
@@ -429,15 +419,36 @@ def init_output_paths(output_dir):
     os.makedirs(BYTES_OUTPUT_PATH)
 
 
+def files_within(file_path, pattern="*"):
+    import os
+    import fnmatch
+
+    if os.path.isfile(file_path):
+        yield file_path
+    else:
+        for dirpath, dirnames, filenames in os.walk(file_path):
+            for file_name in fnmatch.filter(filenames, pattern):
+                yield os.path.join(dirpath, file_name)
+
+
+def get_xls_files_from_file_list(list_file):
+    with open(list_file) as f:
+        files = list(line for line in (l.strip() for l in f) if line)
+    return files
+
+
 if __name__ == '__main__':
     try:
         opt, args = getopt.getopt(sys.argv[1:],
-                                  "ht:o:", ["help", "output=", "tag=", "package_name=", "loader_name="])
+                                  "ht:o:f:p:",
+                                  ["help", "output=", "tag=", "package_name=",
+                                   "loader_name=", "file_list=", "xls_path="])
     except getopt.GetoptError as err:
         print("err:", (err))
         usage()
         sys.exit(-1)
 
+    xls_files = []
     output = []
     tag = None
     for op, value in opt:
@@ -459,21 +470,28 @@ if __name__ == '__main__':
             value = value.strip()
             if len(value) > 0:
                 PACKAGE_NAME = value
+        elif op == "-f" or op == "--file_list":
+            files = get_xls_files_from_file_list(value)
+            xls_files.extend(files)
+        elif op == "-p" or op == "--xls_path":
+            for xls_file in files_within(value, pattern="*.xls"):
+                xls_files.append(xls_file)
 
-    if len(args) < 2:
+    if len(xls_files) == 0:
+        LOG_ERR("no input xls file.")
+        sys.exit(-1)
+
+    if len(args) < 1:
         print("not enough arguments.")
         usage()
         sys.exit(-1)
 
-    xls_file_path = args[0]
-    output_dir = args[1]
-
+    output_dir = args[0]
     init_output_paths(output_dir)
-
     sys.path.append(PYTHON_OUTPUT_PATH)
 
     try:
-        process_path(xls_file_path, tag, output)
+        process_xls_files(xls_files, tag, output)
     except BaseException as info:
         print(info)
         raise
