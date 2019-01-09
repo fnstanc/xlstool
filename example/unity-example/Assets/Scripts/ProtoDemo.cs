@@ -11,11 +11,17 @@ public class ProtoDemo : MonoBehaviour {
         var ta = Resources.Load<TextAsset>("ConfigData");
         ConfigData.Init(ta.bytes);
 
-        var goods = ConfigData.GetGoods(3400);
+        var goods = ConfigData.GoodsFind(3400);
         Debug.LogFormat("goods 3400: {0}", goods.ToString());
 
-        var skill = ConfigData.GetSkill(12020);
+        var skill = ConfigData.SkillFind(12020);
         Debug.LogFormat("skill 12020 {0}", skill.ToString());
+
+        for (int i = 0; i < ConfigData.GoodsCount(); ++i)
+        {
+            var g = ConfigData.GoodsItem(i);
+            Debug.LogFormat("goods iteration {0}: {1}", i, g.ToString());
+        }
 	}
 
 }
